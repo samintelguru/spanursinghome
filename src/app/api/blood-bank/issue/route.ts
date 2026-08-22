@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "@/lib/auth";
+import { can } from "@/lib/permissions";
 
 const prisma = new PrismaClient();
 
+// POST /api/blood-bank/issue
+// Issues blood units to a patient and deducts them from stock,
+// in a single transaction so stock can never go negative or drift.
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session) {
+  const role = (session?.user as { role?: string })?.role;
+  if (!session || !can(role, "issuesBlood")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const issuedById = (session.user as { id?: string })?.id;

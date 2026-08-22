@@ -19,8 +19,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session) {
+      const session = await auth();
+  const role = (session?.user as { role?: string })?.role;
+  if (!session || !can(role, "dispatchesAmbulance")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const staffId = (session.user as { id?: string })?.id;

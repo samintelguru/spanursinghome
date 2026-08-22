@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth, signOut } from "@/lib/auth";
 
-const NAV_ITEMS = [
+const BASE_NAV_ITEMS = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/patients", label: "Patients" },
   { href: "/admin/pharmacy", label: "Pharmacy" },
@@ -21,11 +21,17 @@ export default async function AdminLayout({
     return <>{children}</>;
   }
 
+  const role = (session.user as { role?: string })?.role;
+  const navItems =
+    role === "ADMIN"
+      ? [...BASE_NAV_ITEMS, { href: "/admin/staff", label: "Staff" }]
+      : BASE_NAV_ITEMS;
+
   return (
     <div className="min-h-screen bg-white">
       <header className="flex items-center justify-between border-b border-gray-200 px-6 py-3">
         <nav className="flex gap-4 text-sm">
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}

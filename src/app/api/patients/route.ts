@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
   });
 
   return NextResponse.json({ patients });
+}
 
 export async function POST(req: NextRequest) {
   const session = await auth();
