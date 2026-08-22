@@ -28,9 +28,15 @@ export default function AdminBillingPage() {
   const [reference, setReference] = useState("");
   const [error, setError] = useState("");
 
-  const load = async () => {
+    const load = async () => {
     const res = await fetch("/api/billing/invoices");
-    if (res.ok) setInvoices((await res.json()).invoices);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || `Could not load invoices (status ${res.status})`);
+      return;
+    }
+    setError("");
+    setInvoices((await res.json()).invoices);
   };
 
   useEffect(() => {
