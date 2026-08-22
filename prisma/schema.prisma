@@ -1,0 +1,181 @@
+// SPA Nursing Home — database schema
+// Covers: staff auth/roles, patients, pharmacy inventory, billing,
+// blood bank stock, and ambulance trip records.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------- Staff & access control ----------
+
+enum StaffRole {
+  ADMIN
+  DOCTOR
+  NURSE
+  RECEPTIONIST
+  PHARMACIST
+  BILLING_CLERK
+  LAB_TECH
+}
+
+model Staff {
+  id           String   @id @default(cuid())
+  fullName     String
+  email        String   @unique
+  passwordHash String
+  role         StaffRole
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  dispensedDrugs   PharmacyDispense[]
+  patientsAdmitted Patient[]          @relation("AdmittedBy")
+  bloodIssues      BloodIssue[]
+  ambulanceTrips   AmbulanceTrip[]    @relation("DriverOrStaff")
+}
+
+// ---------- Patients ----------
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model Patient {
+  id           String   @id @default(cuid())
+  fileNumber   String   @unique // hospital-assigned patient number
+  fullName     String
+  gender       Gender
+  dateOfBirth  DateTime
+  phone        String?
+  nextOfKin    String?
+  bloodType    String?  // e.g. "O+", nullable until tested
+  admittedById String?
+  admittedBy   Staff?   @relation("AdmittedBy", fields: [admittedById], references: [id])
+  createdAt    DateTime @default(now())
+
+  dispenses    PharmacyDispense[]
+  invoices     Invoice[]
+  bloodIssues  BloodIssue[]
+  ambulanceTrips AmbulanceTrip[]
+}
+
+// ---------- Pharmacy ----------
+
+model Drug {
+  id          String   @id @default(cuid())
+  name        String
+  unit        String   // e.g. "tablet", "vial", "ml"
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  stockQty    Int
+  reorderAt   Int      @default(10) // low-stock threshold
+  expiryDate  DateTime?
+  updatedAt   DateTime @updatedAt
+
+  dispenses PharmacyDispense[]
+}
+
+model PharmacyDispense {
+  id            String   @id @default(cuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id])
+  drugId        String
+  drug          Drug     @relation(fields: [drugId], references: [id])
+  quantity      Int
+  dispensedById String
+  dispensedBy   Staff    @relation(fields: [dispensedById], references: [id])
+  dispensedAt   DateTime @default(now())
+
+  invoiceItem InvoiceItem?
+}
+
+// ---------- Billing ----------
+
+enum InvoiceStatus {
+  UNPAID
+  PARTIALLY_PAID
+  PAID
+  WAIVED
+}
+
+model Invoice {
+  id        String        @id @default(cuid())
+  patientId String
+  patient   Patient       @relation(fields: [patientId], references: [id])
+  status    InvoiceStatus @default(UNPAID)
+  createdAt DateTime      @default(now())
+
+  items    InvoiceItem[]
+  payments Payment[]
+}
+
+model InvoiceItem {
+  id          String   @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+  description String   // e.g. "Consultation", "Lab test", or linked to a dispense
+  amount      Decimal  @db.Decimal(10, 2)
+
+  dispenseId String?           @unique
+  dispense   PharmacyDispense? @relation(fields: [dispenseId], references: [id])
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  invoiceId String
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+  amount    Decimal  @db.Decimal(10, 2)
+  method    String   // "cash", "mpesa", "insurance"
+  reference String?  // e.g. M-Pesa code
+  paidAt    DateTime @default(now())
+}
+
+// ---------- Blood bank ----------
+
+model BloodStock {
+  id        String   @id @default(cuid())
+  bloodType String   // "O+", "O-", "A+", etc.
+  unitsHeld Int
+  updatedAt DateTime @updatedAt
+
+  issues BloodIssue[]
+}
+
+model BloodIssue {
+  id           String     @id @default(cuid())
+  bloodStockId String
+  bloodStock   BloodStock @relation(fields: [bloodStockId], references: [id])
+  patientId    String
+  patient      Patient    @relation(fields: [patientId], references: [id])
+  units        Int
+  issuedById   String
+  issuedBy     Staff      @relation(fields: [issuedById], references: [id])
+  issuedAt     DateTime   @default(now())
+}
+
+// ---------- Ambulance ----------
+
+enum TripStatus {
+  DISPATCHED
+  EN_ROUTE
+  COMPLETED
+  CANCELLED
+}
+
+model AmbulanceTrip {
+  id            String     @id @default(cuid())
+  patientId     String?
+  patient       Patient?   @relation(fields: [patientId], references: [id])
+  pickupLocation String
+  destination   String
+  status        TripStatus @default(DISPATCHED)
+  staffId       String
+  staff         Staff      @relation("DriverOrStaff", fields: [staffId], references: [id])
+  dispatchedAt  DateTime   @default(now())
+  completedAt   DateTime?
+}
