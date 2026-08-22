@@ -36,17 +36,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    // Carry the staff role onto the JWT, then onto the session,
-    // so admin pages/middleware can check it without a DB round trip.
+    callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {
+        token.id = (user as { id?: string }).id;
         token.role = (user as { role?: string }).role;
       }
       return token;
     },
     session: async ({ session, token }) => {
       if (session.user) {
+        (session.user as { id?: string }).id = token.id as string;
         (session.user as { role?: string }).role = token.role as string;
       }
       return session;

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { auth } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
@@ -8,12 +9,18 @@ const prisma = new PrismaClient();
 // matching invoice line item — in a single transaction so stock
 // and billing can never drift out of sync.
 export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const dispensedById = (session.user as { id?: string })?.id;
+
   const body = await req.json();
-  const { patientId, drugId, quantity, dispensedById } = body;
+  const { patientId, drugId, quantity } = body;
 
   if (!patientId || !drugId || !quantity || !dispensedById) {
     return NextResponse.json(
-      { error: "patientId, drugId, quantity, and dispensedById are required" },
+      { error: "patientId, drugId, and quantity are required" },
       { status: 400 }
     );
   }
