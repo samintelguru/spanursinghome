@@ -1,12 +1,38 @@
-import { PrismaClient } from "@prisma/client";
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const prisma = new PrismaClient();
+type Patient = {
+  id: string;
+  fileNumber: string;
+  fullName: string;
+  gender: string;
+  phone: string | null;
+  createdAt: string;
+};
 
-export default async function AdminPatientsPage() {
-  const patients = await prisma.patient.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+export default function AdminPatientsPage() {
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    const timeout = setTimeout(async () => {
+      const url = query
+        ? `/api/patients?q=${encodeURIComponent(query)}`
+        : "/api/patients";
+      const res = await fetch(url);
+      if (!cancelled && res.ok) {
+        setPatients((await res.json()).patients);
+      }
+    }, 200);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [query]);
 
   return (
     <main className="p-8">
@@ -20,9 +46,19 @@ export default async function AdminPatientsPage() {
         </Link>
       </div>
 
+      <input
+        type="text"
+        placeholder="Search by name or file number..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="mb-4 w-full max-w-sm rounded-md border border-gray-300 px-3 py-2 text-sm"
+      />
+
       {patients.length === 0 ? (
         <p className="text-sm text-gray-500">
-          No patients registered yet. Register the first one to get started.
+          {query
+            ? "No patients match your search."
+            : "No patients registered yet. Register the first one to get started."}
         </p>
       ) : (
         <table className="w-full text-left text-sm">
@@ -38,12 +74,23 @@ export default async function AdminPatientsPage() {
           <tbody>
             {patients.map((p) => (
               <tr key={p.id} className="border-b border-gray-100">
-                <td className="py-2 pr-4">{p.fileNumber}</td>
-                <td className="py-2 pr-4">{p.fullName}</td>
+                <td className="py-2 pr-4">
+                  <Link
+                    href={`/admin/patients/${p.id}`}
+                    className="text-[#0F6E56] hover:underline"
+                  >
+                    {p.fileNumber}
+                  </Link>
+                </td>
+                <td className="py-2 pr-4">
+                  <Link href={`/admin/patients/${p.id}`} className="hover:underline">
+                    {p.fullName}
+                  </Link>
+                </td>
                 <td className="py-2 pr-4">{p.gender}</td>
                 <td className="py-2 pr-4">{p.phone || "—"}</td>
                 <td className="py-2 pr-4">
-                  {p.createdAt.toLocaleDateString()}
+                  {new Date(p.createdAt).toLocaleDateString()}
                 </td>
               </tr>
             ))}

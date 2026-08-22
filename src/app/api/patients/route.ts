@@ -4,18 +4,27 @@ import { auth } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const session = await auth();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const q = req.nextUrl.searchParams.get("q")?.trim();
+
   const patients = await prisma.patient.findMany({
+    where: q
+      ? {
+          OR: [
+            { fullName: { contains: q, mode: "insensitive" } },
+            { fileNumber: { contains: q, mode: "insensitive" } },
+          ],
+        }
+      : undefined,
     orderBy: { createdAt: "desc" },
   });
 
   return NextResponse.json({ patients });
-}
 
 export async function POST(req: NextRequest) {
   const session = await auth();

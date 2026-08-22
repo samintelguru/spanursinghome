@@ -12,8 +12,8 @@ export default auth((req) => {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (isLoggedIn && isLoginPage) {
-    const adminHome = new URL("/admin/patients", req.nextUrl.origin);
+   if (isLoggedIn && isLoginPage) {
+    const adminHome = new URL("/admin", req.nextUrl.origin);
     return NextResponse.redirect(adminHome);
   }
 });
