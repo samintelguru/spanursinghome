@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 type InvoiceItem = { id: string; description: string; amount: string };
 type Payment = { id: string; amount: string; method: string };
@@ -93,9 +94,17 @@ export default function AdminBillingPage() {
                       {new Date(inv.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <span className={`text-xs font-medium ${statusColor[inv.status]}`}>
-                    {inv.status.replace("_", " ")}
-                  </span>
+                                    <div className="flex items-center gap-3">
+                    <span className={`text-xs font-medium ${statusColor[inv.status]}`}>
+                      {inv.status.replace("_", " ")}
+                    </span>
+                    <Link
+                      href={`/admin/billing/${inv.id}/receipt`}
+                      className="text-xs text-[#0F6E56] hover:underline"
+                    >
+                      Receipt
+                    </Link>
+                  </div>
                 </div>
 
                 <ul className="mb-2 text-sm text-gray-600">
