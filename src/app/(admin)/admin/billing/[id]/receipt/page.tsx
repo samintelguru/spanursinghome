@@ -63,7 +63,7 @@ export default async function ReceiptPage({
             {invoice.items.map((item) => (
               <tr key={item.id} className="border-b border-gray-100">
                 <td className="py-1">{item.description}</td>
-                <td className="py-1 text-right">KES {item.amount}</td>
+                <td className="py-1 text-right">KES {Number(item.amount).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -85,7 +85,7 @@ export default async function ReceiptPage({
                   {p.method} {p.reference ? `(${p.reference})` : ""} —{" "}
                   {p.paidAt.toLocaleDateString()}
                 </span>
-                <span>KES {p.amount}</span>
+                <span>KES {Number(p.amount).toFixed(2)}</span>
               </div>
             ))}
           </div>
