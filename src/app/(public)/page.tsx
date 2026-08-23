@@ -143,6 +143,56 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Trust strip — facts we can actually stand behind */}
+      <section className="border-y border-[#E8E2D6] bg-[#E8E2D6]/60">
+        <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-3">
+          {[
+            {
+              title: "24-hour outpatient care",
+              body: "Our clinic doesn't close — walk in any hour of the day or night.",
+            },
+            {
+              title: "Everything under one roof",
+              body: "Consultation, lab, ultrasound, and pharmacy on the same visit.",
+            },
+            {
+              title: "A team that knows you",
+              body: "Qualified doctors, nurses, and midwives who treat you like family.",
+            },
+          ].map((item) => (
+            <div key={item.title}>
+              <p className="font-serif text-lg font-semibold text-[#0F6E56]">
+                {item.title}
+              </p>
+              <p className="mt-1 text-sm text-[#5F5E5A]">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials — placeholders only; replace with real, consented patient quotes */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <p className="mb-10 font-serif text-2xl font-semibold">
+          What our patients say
+        </p>
+        <div className="grid gap-6 sm:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="rounded-2xl border-2 border-dashed border-[#c9c1ac] bg-white p-6"
+            >
+              <p className="text-sm italic text-[#8A8880]">
+                "Replace with a real quote from a patient who has given
+                permission to be featured — including their first name."
+              </p>
+              <p className="mt-4 text-xs font-medium text-[#8A8880]">
+                — Patient name, service used
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="bg-[#0F6E56] py-16 text-center text-white">
         <p className="font-serif text-2xl font-semibold">
           Need to see someone today?
