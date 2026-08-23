@@ -1,8 +1,9 @@
-import { auth } from "@/lib/auth";
+import NextAuth from "next-auth";
+import { authConfig } from "@/lib/auth.config";
 import { NextResponse } from "next/server";
 
-// Protects everything under /admin except /admin/login itself.
-// Redirects unauthenticated visitors to the login page.
+const { auth } = NextAuth(authConfig);
+
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const isLoginPage = req.nextUrl.pathname === "/admin/login";
@@ -12,7 +13,7 @@ export default auth((req) => {
     return NextResponse.redirect(loginUrl);
   }
 
-   if (isLoggedIn && isLoginPage) {
+  if (isLoggedIn && isLoginPage) {
     const adminHome = new URL("/admin", req.nextUrl.origin);
     return NextResponse.redirect(adminHome);
   }
