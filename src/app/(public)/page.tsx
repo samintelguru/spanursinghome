@@ -85,27 +85,58 @@ export default function HomePage() {
               href: "/services/maternity",
               title: "Maternity",
               body: "Ante-natal care through normal and caesarian delivery.",
+              icon: (
+                <path d="M12 21s-7-4.5-7-10a5 5 0 0110-1 5 5 0 0110 1c0 5.5-7 10-7 10z" />
+              ),
             },
             {
               href: "/services/lab",
               title: "Lab & imaging",
               body: "Ultrasound and diagnostic testing, results same day.",
+              icon: (
+                <>
+                  <path d="M9 3h6M10 3v6l-5 9a2 2 0 001.8 3h10.4a2 2 0 001.8-3l-5-9V3" />
+                </>
+              ),
             },
             {
               href: "/services/outpatient",
               title: "Outpatient clinic",
               body: "General consultation, family planning, 24-hour access.",
+              icon: (
+                <>
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3 3" />
+                </>
+              ),
             },
           ].map((s) => (
             <Link
               key={s.href}
               href={s.href}
-              className="rounded-2xl bg-[#E8E2D6] p-6 transition hover:bg-[#dfd7c4]"
+              className="group rounded-2xl bg-[#E8E2D6] p-6 transition duration-200 hover:-translate-y-1 hover:bg-[#dfd7c4] hover:shadow-md"
             >
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0F6E56]">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  {s.icon}
+                </svg>
+              </div>
               <p className="font-serif text-lg font-semibold">{s.title}</p>
               <p className="mt-2 text-sm text-[#5F5E5A]">{s.body}</p>
               <p className="mt-4 text-sm font-medium text-[#0F6E56]">
-                Learn more →
+                Learn more{" "}
+                <span className="inline-block transition group-hover:translate-x-0.5">
+                  →
+                </span>
               </p>
             </Link>
           ))}
