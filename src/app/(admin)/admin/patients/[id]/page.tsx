@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { notFound } from "next/navigation";
+import VisitNotesSection from "./visit-notes-section";
 
 const prisma = new PrismaClient();
 
@@ -100,7 +101,7 @@ export default async function PatientDetailPage({
         )}
       </section>
 
-      <section>
+            <section className="mb-6">
         <h2 className="mb-2 text-sm font-medium text-gray-700">
           Ambulance trips
         </h2>
@@ -117,6 +118,8 @@ export default async function PatientDetailPage({
           </ul>
         )}
       </section>
+
+      <VisitNotesSection patientId={patient.id} />
     </main>
   );
 }

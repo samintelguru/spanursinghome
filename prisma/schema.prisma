@@ -37,6 +37,7 @@ model Staff {
   patientsAdmitted Patient[]          @relation("AdmittedBy")
   bloodIssues      BloodIssue[]
   ambulanceTrips   AmbulanceTrip[]    @relation("DriverOrStaff")
+  visitNotes       VisitNote[]
 }
 
 // ---------- Patients ----------
@@ -63,6 +64,22 @@ model Patient {
   invoices     Invoice[]
   bloodIssues  BloodIssue[]
   ambulanceTrips AmbulanceTrip[]
+  visitNotes   VisitNote[]
+}
+
+// ---------- Visit notes ----------
+
+model VisitNote {
+  id             String   @id @default(cuid())
+  patientId      String
+  patient        Patient  @relation(fields: [patientId], references: [id])
+  recordedById   String
+  recordedBy     Staff    @relation(fields: [recordedById], references: [id])
+  note           String
+  temperatureC   Decimal? @db.Decimal(4, 1)
+  bloodPressure  String?
+  pulseBpm       Int?
+  createdAt      DateTime @default(now())
 }
 
 // ---------- Pharmacy ----------

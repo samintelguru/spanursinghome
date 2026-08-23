@@ -6,6 +6,7 @@ export const PERMISSIONS = {
   issuesBlood: ["ADMIN", "LAB_TECH", "DOCTOR", "NURSE"],
   recordsPayments: ["ADMIN", "BILLING_CLERK", "RECEPTIONIST"],
   dispatchesAmbulance: ["ADMIN", "RECEPTIONIST", "NURSE", "DOCTOR"],
+  recordsVisitNotes: ["ADMIN", "DOCTOR", "NURSE"],
   managesStaff: ["ADMIN"],
 } as const;
 
