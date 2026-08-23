@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { auth, signOut } from "@/lib/auth";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 const BASE_NAV_ITEMS = [
   { href: "/admin", label: "Dashboard" },
@@ -27,10 +30,17 @@ export default async function AdminLayout({
       ? [...BASE_NAV_ITEMS, { href: "/admin/staff", label: "Staff" }]
       : BASE_NAV_ITEMS;
 
+  const [allDrugs, lowBlood] = await Promise.all([
+    prisma.drug.findMany(),
+    prisma.bloodStock.findMany({ where: { unitsHeld: { lte: 2 } } }),
+  ]);
+  const alertCount =
+    allDrugs.filter((d) => d.stockQty <= d.reorderAt).length + lowBlood.length;
+
   return (
     <div className="min-h-screen bg-white">
       <header className="flex items-center justify-between border-b border-gray-200 px-6 py-3">
-        <nav className="flex gap-4 text-sm">
+        <nav className="flex items-center gap-4 text-sm">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -40,6 +50,17 @@ export default async function AdminLayout({
               {item.label}
             </Link>
           ))}
+          <Link
+            href="/admin/alerts"
+            className="flex items-center gap-1 text-gray-600 hover:text-black"
+          >
+            Alerts
+            {alertCount > 0 && (
+              <span className="rounded-full bg-red-600 px-1.5 py-0.5 text-xs font-medium text-white">
+                {alertCount}
+              </span>
+            )}
+          </Link>
         </nav>
         <form
           action={async () => {
