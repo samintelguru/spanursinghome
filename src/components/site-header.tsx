@@ -16,12 +16,17 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-[#E8E2D6] bg-[#F1EFE8]/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link
+                <Link
           href="/"
-          className="font-serif text-lg font-semibold text-[#0F6E56]"
+          className="flex items-center"
           onClick={() => setOpen(false)}
         >
-          SPA Nursing Home
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/spalogo.png"
+            alt="SPA Nursing Home"
+            className="h-20 w-auto"
+          />
         </Link>
 
         <nav className="hidden gap-8 text-sm text-[#2C2C2A] sm:flex">

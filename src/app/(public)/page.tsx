@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PhotoCarousel from "@/components/photo-carousel";
 
 export default function HomePage() {
   return (
@@ -32,13 +33,24 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="aspect-[4/3] rounded-2xl bg-[#E8E2D6] p-6">
-            <div className="flex h-full w-full items-center justify-center rounded-xl border-2 border-dashed border-[#c9c1ac] text-center text-sm text-[#8A8880]">
-              Photo of the facility exterior or reception —
-              <br />
-              replace with real photography
-            </div>
-          </div>
+                              <PhotoCarousel
+            slides={[
+              { src: "/images/carousel/photo1.jpeg", alt: "SPA Nursing Home reception" },
+              { src: "/images/carousel/photo2.jpeg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo3.jpeg", alt: "SPA Nursing Home ward" },
+              { src: "/images/carousel/photo4.jpeg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo5.jpeg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo6.jpeg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo7.jpeg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo8.jpeg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo9.jpg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo10.jpg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo11.jpeg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo12.jpeg", alt: "SPA Nursing Home facility" },
+              { src: "/images/carousel/photo13.jpeg", alt: "SPA Nursing Home facility" },
+              // add more lines here, one per photo, matching your filenames
+            ]}
+          />
         </div>
       </section>
 
