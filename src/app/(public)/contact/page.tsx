@@ -4,9 +4,28 @@ import { useState } from "react";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+  const [form, setForm] = useState({ fullName: "", phone: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setSending(true);
+
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    setSending(false);
+
+    if (!res.ok) {
+      setError("Something went wrong. Please try calling us directly instead.");
+      return;
+    }
+
     setSubmitted(true);
   };
 
@@ -57,25 +76,33 @@ export default function ContactPage() {
               <input
                 placeholder="Full name"
                 required
+                value={form.fullName}
+                onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                 className="rounded-md border border-[#E8E2D6] px-3 py-2 text-sm"
               />
               <input
                 type="tel"
                 placeholder="Phone number"
                 required
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="rounded-md border border-[#E8E2D6] px-3 py-2 text-sm"
               />
               <textarea
                 placeholder="What can we help you with?"
                 required
                 rows={4}
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
                 className="rounded-md border border-[#E8E2D6] px-3 py-2 text-sm"
               />
+              {error && <p className="text-sm text-red-600">{error}</p>}
               <button
                 type="submit"
-                className="mt-2 rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28]"
+                disabled={sending}
+                className="mt-2 rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28] disabled:opacity-60"
               >
-                Send message
+                {sending ? "Sending..." : "Send message"}
               </button>
             </form>
           )}
@@ -83,4 +110,4 @@ export default function ContactPage() {
       </section>
     </main>
   );
-}n
+}
