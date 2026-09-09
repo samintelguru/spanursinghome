@@ -14,8 +14,8 @@ export default function SiteFooter() {
         </div>
         <div>
           <p className="mb-2 text-sm font-medium text-[#2C2C2A]">Reach us</p>
-          <p className="text-sm text-[#5F5E5A]">Emergency line: 0700 000 000</p>
-          <p className="text-sm text-[#5F5E5A]">info@spanursinghome.org</p>
+          <p className="text-sm text-[#5F5E5A]">Phone : 0706 155 600 | 0719 863 747 | 0772 711 869</p>
+          <p className="text-sm text-[#5F5E5A]">Email : spahospitalruiruke@gmail.com</p>
           <p className="mt-1 text-sm text-[#5F5E5A]">Outpatient clinic: 24 hours</p>
         </div>
         <div>

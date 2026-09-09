@@ -2,6 +2,11 @@ import Link from "next/link";
 
 const SERVICES = [
   {
+    href: "/services/inpatient",
+    title: "Inpatient care",
+    body: "Round-the-clock nursing, daily doctor's rounds, and a room to recover in — general, semi-private, or private.",
+  },
+  {
     href: "/services/maternity",
     title: "Maternity",
     body: "Ante-natal care, normal and caesarian delivery, and postnatal support for you and your baby.",
@@ -21,20 +26,23 @@ const SERVICES = [
 export default function ServicesPage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
-      <section className="mx-auto max-w-4xl px-6 pb-16 pt-16 sm:pt-24">
-        <p className="mb-4 text-sm font-medium tracking-wide text-[#0F6E56]">
-          SERVICES
-        </p>
-        <h1 className="font-serif text-4xl font-semibold leading-tight">
-          Care for every stage
-        </h1>
-        <p className="mt-6 max-w-xl text-[#5F5E5A]">
-          From your first ante-natal visit to a same-day lab test, our team
-          covers the care most families need close to home.
-        </p>
+      {/* Hero */}
+      <section className="bg-[#0B2420] text-[#F6F1E4]">
+        <div className="mx-auto max-w-4xl px-6 pb-16 pt-16 sm:pt-24">
+          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
+            SERVICES
+          </p>
+          <h1 className="font-serif text-4xl font-semibold leading-tight">
+            Care for every stage
+          </h1>
+          <p className="mt-6 max-w-xl text-[#C9D8CE]">
+            From a full inpatient stay to a same-day lab test, our team
+            covers the care most families need close to home.
+          </p>
+        </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-6 pb-20">
+      <section className="mx-auto max-w-4xl px-6 py-16">
         <div className="flex flex-col gap-4">
           {SERVICES.map((s) => (
             <Link

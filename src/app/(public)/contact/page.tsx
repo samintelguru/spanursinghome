@@ -31,32 +31,39 @@ export default function ContactPage() {
 
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
-      <section className="mx-auto grid max-w-5xl gap-12 px-6 pb-20 pt-16 sm:grid-cols-2 sm:pt-24">
-        <div>
-          <p className="mb-4 text-sm font-medium tracking-wide text-[#0F6E56]">
+      {/* Hero */}
+      <section className="bg-[#0B2420] text-[#F6F1E4]">
+        <div className="mx-auto max-w-5xl px-6 pb-16 pt-16 sm:pt-24">
+          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
             CONTACT
           </p>
           <h1 className="font-serif text-4xl font-semibold leading-tight">
             Get in touch
           </h1>
-          <p className="mt-6 text-[#5F5E5A]">
+          <p className="mt-6 max-w-xl text-[#C9D8CE]">
             For urgent concerns, walk in any time — our outpatient clinic
             never closes. For everything else, reach us below.
           </p>
+        </div>
+      </section>
 
-          <div className="mt-8 flex flex-col gap-3 text-sm">
-            <div>
-              <p className="font-medium">Emergency line</p>
-              <p className="text-[#5F5E5A]">0700 000 000</p>
-            </div>
-            <div>
-              <p className="font-medium">Email</p>
-              <p className="text-[#5F5E5A]">info@spanursinghome.org</p>
-            </div>
-            <div>
-              <p className="font-medium">Location</p>
-              <p className="text-[#5F5E5A]">Ruiru, Kiambu County, Kenya</p>
-            </div>
+      <section className="mx-auto grid max-w-5xl gap-12 px-6 py-16 sm:grid-cols-2">
+        <div>
+          <div className="flex flex-col gap-3">
+            {[
+              { label: "Emergency line", value: "0706 155 600" },
+              { label: "Email", value: "info@spanursinghome.org" },
+              {
+                label: "Location",
+                value:
+                  "Off Kimbo-Matangi Road, Ruiru, Kiambu County — 800m off the Thika superhighway, behind Kenyatta University's Ruiru campus.",
+              },
+            ].map((item) => (
+              <div key={item.label} className="rounded-xl bg-white p-4">
+                <p className="text-sm font-medium">{item.label}</p>
+                <p className="mt-1 text-sm text-[#5F5E5A]">{item.value}</p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -106,6 +113,28 @@ export default function ContactPage() {
               </button>
             </form>
           )}
+        </div>
+      </section>
+
+      {/* Map */}
+      <section className="border-t border-[#E8E2D6] bg-white py-16">
+        <div className="mx-auto max-w-5xl px-6">
+          <p className="mb-6 font-serif text-2xl font-semibold">Find us</p>
+          <div className="overflow-hidden rounded-2xl border border-[#E8E2D6]">
+            <iframe
+              title="SPA Nursing Home location"
+              src="https://www.google.com/maps?q=-1.142362959690373, 36.98232017190173&z=16&output=embed"
+              width="100%"
+              height="400"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+          <p className="mt-4 text-sm text-[#5F5E5A]">
+            Off Kimbo-Matangi Road — 800m off the Thika superhighway, behind
+            Kenyatta University's Ruiru campus.
+          </p>
         </div>
       </section>
     </main>

@@ -4,95 +4,176 @@ import PhotoCarousel from "@/components/photo-carousel";
 export default function HomePage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
-      <section className="mx-auto max-w-6xl px-6 pb-20 pt-16 sm:pt-24">
-        <div className="grid gap-12 sm:grid-cols-2 sm:items-center">
-          <div>
-            <p className="mb-4 text-sm font-medium tracking-wide text-[#0F6E56]">
-              RUIRU, KIAMBU COUNTY
-            </p>
-            <h1 className="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-              Care that knows your name
-            </h1>
-            <p className="mt-5 max-w-md text-[#5F5E5A]">
-              Outpatient, maternity, and diagnostic services from a team our
-              community has trusted for years. Walk in any time — our
-              outpatient clinic never closes.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/contact"
-                className="rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28]"
-              >
-                Book an appointment
-              </Link>
-              <Link
-                href="/services"
-                className="rounded-full border border-[#0F6E56] px-6 py-3 text-sm font-medium text-[#0F6E56] hover:bg-[#0F6E56]/5"
-              >
-                See our services
-              </Link>
+      {/* Hero — text + carousel side by side, same position/size as before */}
+      <section className="bg-[#0B2420] text-[#F6F1E4]">
+        <div className="mx-auto max-w-6xl px-6 pb-12 pt-16 sm:pt-24">
+          <div className="grid gap-12 sm:grid-cols-2 sm:items-center">
+            <div>
+              <p className="mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
+                INPATIENT CARE · RUIRU, KIAMBU COUNTY
+              </p>
+              <h1 className="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
+                Someone is always on the ward
+              </h1>
+              <p className="mt-5 max-w-md text-[#C9D8CE]">
+                Admission through discharge, a nurse is at your bedside and a
+                doctor is a call away — day shift, night shift, every shift.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/contact"
+                  className="rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28]"
+                >
+                  Plan an admission
+                </Link>
+                <Link
+                  href="/services/inpatient"
+                  className="rounded-full border border-[#3F5A52] px-6 py-3 text-sm font-medium text-[#F6F1E4] hover:bg-white/5"
+                >
+                  See ward options
+                </Link>
+              </div>
+            </div>
+
+            <PhotoCarousel
+              slides={[
+                { src: "/images/carousel/photo1.jpeg", alt: "SPA Nursing Home reception" },
+                { src: "/images/carousel/photo2.jpeg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo3.jpeg", alt: "SPA Nursing Home ward" },
+                { src: "/images/carousel/photo4.jpeg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo5.jpeg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo6.jpeg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo7.jpeg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo8.jpeg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo9.jpg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo10.jpg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo11.jpeg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo12.jpeg", alt: "SPA Nursing Home facility" },
+                { src: "/images/carousel/photo13.jpeg", alt: "SPA Nursing Home facility" },
+              ]}
+            />
+          </div>
+
+          {/* Nursing coverage stat bar — kept small, doesn't compete with the carousel */}
+          <div className="mt-14 flex flex-col gap-4 border-t border-[#244339] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="font-serif text-2xl font-semibold">24 / 7</span>
+              <span className="ml-3 text-sm text-[#C9D8CE]">
+                nursing coverage — every hour of your stay is a staffed hour.
+              </span>
+            </div>
+            <div className="flex gap-1.5 sm:w-48">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="h-1 flex-1 rounded-full bg-[#E8A33D]" />
+              ))}
             </div>
           </div>
-                              <PhotoCarousel
-            slides={[
-              { src: "/images/carousel/photo1.jpeg", alt: "SPA Nursing Home reception" },
-              { src: "/images/carousel/photo2.jpeg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo3.jpeg", alt: "SPA Nursing Home ward" },
-              { src: "/images/carousel/photo4.jpeg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo5.jpeg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo6.jpeg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo7.jpeg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo8.jpeg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo9.jpg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo10.jpg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo11.jpeg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo12.jpeg", alt: "SPA Nursing Home facility" },
-              { src: "/images/carousel/photo13.jpeg", alt: "SPA Nursing Home facility" },
-              // add more lines here, one per photo, matching your filenames
-            ]}
-          />
         </div>
       </section>
 
-      <section className="border-y border-[#E8E2D6] bg-white py-16">
+      {/* What a stay looks like — genuine sequence, not a generic card grid */}
+      <section className="border-b border-[#E8E2D6] bg-white py-16">
         <div className="mx-auto max-w-6xl px-6">
-          <p className="mb-10 text-center font-serif text-2xl font-semibold">
-            What a visit looks like
+          <p className="mb-10 font-serif text-2xl font-semibold">
+            What a stay looks like
           </p>
-          <div className="grid gap-8 sm:grid-cols-3">
+          <div className="relative grid gap-8 sm:grid-cols-4">
+            <div className="pointer-events-none absolute top-[11px] left-0 right-0 hidden h-px bg-[#E8E2D6] sm:block" />
             {[
               {
-                step: "01",
-                title: "Walk in, any hour",
-                body: "Our outpatient clinic runs 24 hours. No appointment needed for urgent concerns.",
+                n: "1",
+                title: "Admission",
+                body: "Room assigned by need — general, semi-private, or private.",
               },
               {
-                step: "02",
-                title: "See a doctor or nurse",
-                body: "A clinician assesses you, orders any lab work or imaging needed, right on site.",
+                n: "2",
+                title: "Doctor's rounds",
+                body: "Daily rounds, plus specialists brought in as your case needs.",
               },
               {
-                step: "03",
-                title: "Leave with what you need",
-                body: "Prescriptions filled at our pharmacy before you leave — no separate trip required.",
+                n: "3",
+                title: "Family visits",
+                body: "Set visiting windows so you can rest, and your people can still reach you.",
               },
-            ].map((item) => (
-              <div key={item.step}>
-                <p className="font-serif text-3xl font-semibold text-[#D85A30]">
-                  {item.step}
-                </p>
-                <p className="mt-2 font-medium">{item.title}</p>
-                <p className="mt-1 text-sm text-[#5F5E5A]">{item.body}</p>
+              {
+                n: "4",
+                title: "Discharge",
+                body: "A clear plan home, with any follow-up booked before you leave.",
+              },
+            ].map((s) => (
+              <div key={s.n} className="relative">
+                <div className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[#0F6E56] text-xs font-medium text-white">
+                  {s.n}
+                </div>
+                <p className="mt-4 font-medium">{s.title}</p>
+                <p className="mt-1 text-sm text-[#5F5E5A]">{s.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* Room options — plain list, not icon cards */}
+      <section className="border-y border-[#E8E2D6] bg-[#EDE6D3]/60 py-20">
+        <div className="mx-auto max-w-3xl px-6">
+          <p className="mb-10 font-serif text-2xl font-semibold">
+            Room options
+          </p>
+          <div className="flex flex-col">
+            {[
+              {
+                name: "General ward",
+                body: "Shared, closely monitored, most affordable.",
+                tag: "Most common",
+              },
+              {
+                name: "Semi-private",
+                body: "Two beds, more quiet, a bit more space.",
+                tag: "",
+              },
+              {
+                name: "Private room",
+                body: "Own room, space for family to stay close.",
+                tag: "",
+              },
+            ].map((r, i) => (
+              <div
+                key={r.name}
+                className={`flex items-baseline justify-between gap-6 py-5 ${
+                  i === 0 ? "border-t" : ""
+                } border-b border-[#c9c1ac]`}
+              >
+                <div>
+                  <p className="font-medium">{r.name}</p>
+                  <p className="mt-1 text-sm text-[#5F5E5A]">{r.body}</p>
+                </div>
+                {r.tag && (
+                  <p className="shrink-0 text-sm font-medium text-[#D85A30]">
+                    {r.tag}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Other services — inpatient leads, rest follow */}
       <section className="mx-auto max-w-6xl px-6 py-20">
         <p className="mb-10 font-serif text-2xl font-semibold">Our services</p>
-        <div className="grid gap-6 sm:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-4">
           {[
+            {
+              href: "/services/inpatient",
+              title: "Inpatient care",
+              body: "Round-the-clock nursing, doctor's rounds, and a room to recover in.",
+              icon: (
+                <>
+                  <rect x="4" y="10" width="16" height="8" rx="1.5" />
+                  <path d="M4 14h16M8 10V7a2 2 0 012-2h4a2 2 0 012 2v3" />
+                </>
+              ),
+            },
             {
               href: "/services/maternity",
               title: "Maternity",
@@ -155,62 +236,57 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trust strip — facts we can actually stand behind */}
-      <section className="border-y border-[#E8E2D6] bg-[#E8E2D6]/60">
-        <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-3">
-          {[
-            {
-              title: "24-hour outpatient care",
-              body: "Our clinic doesn't close — walk in any hour of the day or night.",
-            },
-            {
-              title: "Everything under one roof",
-              body: "Consultation, lab, ultrasound, and pharmacy on the same visit.",
-            },
-            {
-              title: "A team that knows you",
-              body: "Qualified doctors, nurses, and midwives who treat you like family.",
-            },
-          ].map((item) => (
-            <div key={item.title}>
-              <p className="font-serif text-lg font-semibold text-[#0F6E56]">
-                {item.title}
-              </p>
-              <p className="mt-1 text-sm text-[#5F5E5A]">{item.body}</p>
-            </div>
-          ))}
+      {/* Family quote — placeholder, replace with a real consented quote */}
+      <section className="bg-[#EDE6D3]/60 py-20">
+        <div className="mx-auto max-w-2xl px-6 text-center">
+          <p className="font-serif text-2xl italic leading-snug text-[#3B2E22] sm:text-[26px]">
+            "Replace with a real quote from a patient or family member who has
+            given permission to be featured — including their first name."
+          </p>
+          <p className="mt-5 text-sm font-medium text-[#8A8880]">
+            — Family member, service used
+          </p>
         </div>
       </section>
 
-      {/* Testimonials — placeholders only; replace with real, consented patient quotes */}
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="mb-10 font-serif text-2xl font-semibold">
-          What our patients say
-        </p>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="rounded-2xl border-2 border-dashed border-[#c9c1ac] bg-white p-6"
-            >
-              <p className="text-sm italic text-[#8A8880]">
-                "Replace with a real quote from a patient who has given
-                permission to be featured — including their first name."
+      {/* Find us — small map, links through to full contact page */}
+      <section className="border-t border-[#E8E2D6] bg-white py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="grid gap-8 sm:grid-cols-2 sm:items-center">
+            <div>
+              <p className="mb-3 font-serif text-2xl font-semibold">Find us</p>
+              <p className="text-sm text-[#5F5E5A]">
+                Off Kimbo-Matangi Road, Ruiru — 800m off the Thika
+                superhighway, behind Kenyatta University's Ruiru campus.
               </p>
-              <p className="mt-4 text-xs font-medium text-[#8A8880]">
-                — Patient name, service used
-              </p>
+              <Link
+                href="/contact"
+                className="mt-4 inline-block text-sm font-medium text-[#0F6E56] hover:underline"
+              >
+                Get directions →
+              </Link>
             </div>
-          ))}
+            <div className="overflow-hidden rounded-2xl border border-[#E8E2D6]">
+              <iframe
+                title="SPA Nursing Home location"
+                src="https://www.google.com/maps?q=-1.142362959690373, 36.98232017190173&z=15&output=embed"
+                width="100%"
+                height="220"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
       <section className="bg-[#0F6E56] py-16 text-center text-white">
         <p className="font-serif text-2xl font-semibold">
-          Need to see someone today?
+          Need to arrange an admission?
         </p>
         <p className="mt-2 text-white/80">
-          Call us or walk in — our outpatient clinic is open around the clock.
+          Call us or walk in — our team will help you find the right room.
         </p>
         <Link
           href="/contact"

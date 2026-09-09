@@ -14,7 +14,7 @@ export default function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#E8E2D6] bg-[#F1EFE8]/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-white/40 bg-[#F1EFE8]/60 shadow-[0_8px_32px_rgba(15,110,86,0.08)] backdrop-blur-xl backdrop-saturate-150">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
                 <Link
           href="/"
@@ -69,7 +69,7 @@ export default function SiteHeader() {
       </div>
 
       {open && (
-        <nav className="flex flex-col gap-1 border-t border-[#E8E2D6] bg-[#F1EFE8] px-6 py-4 sm:hidden">
+        <nav className="flex flex-col gap-1 border-t border-white/40 bg-[#F1EFE8]/70 px-6 py-4 backdrop-blur-xl backdrop-saturate-150 sm:hidden">
           {NAV.map((item) => (
             <Link
               key={item.href}
