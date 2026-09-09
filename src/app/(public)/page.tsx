@@ -22,7 +22,7 @@ export default function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/contact"
-                  className="rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28]"
+                  className="rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0982e8]"
                 >
                   Plan an admission
                 </Link>
@@ -148,7 +148,7 @@ export default function HomePage() {
                   <p className="mt-1 text-sm text-[#5F5E5A]">{r.body}</p>
                 </div>
                 {r.tag && (
-                  <p className="shrink-0 text-sm font-medium text-[#D85A30]">
+                  <p className="shrink-0 text-sm font-medium text-[#0982e8]">
                     {r.tag}
                   </p>
                 )}
@@ -289,7 +289,7 @@ export default function HomePage() {
         </p>
         <Link
           href="/contact"
-          className="mt-6 inline-block rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28]"
+          className="mt-6 inline-block rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0982e8]"
         >
           Get in touch
         </Link>

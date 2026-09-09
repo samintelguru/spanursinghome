@@ -23,7 +23,7 @@ export default function SiteHeader() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/spalogo.png"
+            src="/images/spalogo1.png"
             alt="SPA Nursing Home"
             className="h-20 w-auto"
           />
@@ -44,7 +44,7 @@ export default function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link
             href="/contact"
-            className="hidden rounded-full bg-[#D85A30] px-5 py-2 text-sm font-medium text-white hover:bg-[#c14f28] sm:inline-block"
+            className="hidden rounded-full bg-[#0982e8] px-5 py-2 text-sm font-medium text-white hover:bg-[#0982e8] sm:inline-block"
           >
             Book appointment
           </Link>
@@ -83,7 +83,7 @@ export default function SiteHeader() {
           <Link
             href="/contact"
             onClick={() => setOpen(false)}
-            className="mt-2 rounded-full bg-[#D85A30] px-5 py-2.5 text-center text-sm font-medium text-white"
+            className="mt-2 rounded-full bg-[#0982e8] px-5 py-2.5 text-center text-sm font-medium text-white"
           >
             Book appointment
           </Link>

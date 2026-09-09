@@ -34,7 +34,7 @@ export default function MaternityServicePage() {
 
         <Link
           href="/contact"
-          className="mt-10 inline-block rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28]"
+          className="mt-10 inline-block rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0982e8]"
         >
           Book a maternity consultation
         </Link>
