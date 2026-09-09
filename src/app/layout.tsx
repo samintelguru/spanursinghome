@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SPA Nursing Home",
-  description: "Outpatient, maternity, and diagnostic care in Ruiru, Kiambu County.",
+  description: "Inpatient, Outpatient, Maternity, and diagnostic care in Ruiru, Kiambu County.",
 };;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
