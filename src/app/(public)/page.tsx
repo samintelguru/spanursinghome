@@ -240,10 +240,10 @@ export default function HomePage() {
       <section className="bg-[#EDE6D3]/60 py-20">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <p className="font-serif text-2xl italic leading-snug text-[#3B2E22] sm:text-[26px]">
-            "The nurses checked on my mother throughout the night. We felt she was truly cared for." — Grace, daughter of a patient.
+            "The nurses checked on my mother throughout the night. We felt she was truly cared for."
           </p>
           <p className="mt-5 text-sm font-medium text-[#8A8880]">
-            — Family member, service used
+            — Grace, inpatient stay
           </p>
         </div>
       </section>

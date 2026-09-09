@@ -3,18 +3,18 @@ import Link from "next/link";
 export default function InpatientServicePage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
-      <section className="bg-[#0B2420] text-[#F6F1E4]">
+      <section className="bg-[#0B3D63] text-[#F6F1E4]">
         <div className="mx-auto max-w-3xl px-6 pb-20 pt-16 sm:pt-24">
-          <Link href="/services" className="text-sm text-[#8FBBA9] hover:underline">
+          <Link href="/services" className="text-sm text-[#8FB8D9] hover:underline">
             ← All services
           </Link>
-          <p className="mt-6 mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
+          <p className="mt-6 mb-4 text-sm font-medium tracking-wide text-[#8FB8D9]">
             INPATIENT CARE
           </p>
           <h1 className="font-serif text-4xl font-semibold leading-tight">
             A room, a nurse, and a plan for getting you home
           </h1>
-          <p className="mt-6 max-w-xl text-[#C9D8CE]">
+          <p className="mt-6 max-w-xl text-[#C9D8E8]">
             When a condition needs more than a same-day visit, our inpatient
             wards give you round-the-clock nursing, daily doctor's rounds,
             and a clear plan for recovery — with your family able to visit
@@ -22,7 +22,7 @@ export default function InpatientServicePage() {
           </p>
           <Link
             href="/contact"
-            className="mt-10 inline-block rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28]"
+            className="mt-10 inline-block rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0a70c4]"
           >
             Plan an admission
           </Link>
@@ -64,7 +64,7 @@ export default function InpatientServicePage() {
               },
             ].map((s) => (
               <div key={s.n} className="flex gap-5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0B3D63 ] text-xs font-medium text-white">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0B3D63] text-xs font-medium text-white">
                   {s.n}
                 </div>
                 <div>
@@ -112,7 +112,7 @@ export default function InpatientServicePage() {
                   <p className="mt-1 text-sm text-[#5F5E5A]">{r.body}</p>
                 </div>
                 {r.tag && (
-                  <p className="shrink-0 text-sm font-medium text-[#D85A30]">
+                  <p className="shrink-0 text-sm font-medium text-[#0982e8]">
                     {r.tag}
                   </p>
                 )}
@@ -156,12 +156,11 @@ export default function InpatientServicePage() {
       <section className="bg-[#EDE6D3]/60 py-16">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <p className="font-serif text-xl italic leading-snug text-[#3B2E22]">
-            "Replace with a real quote from a patient or family member who
-            has given permission to be featured — including their first
-            name."
+            "The nurses checked on my mother throughout 
+            the night. We felt she was truly cared for."
           </p>
           <p className="mt-5 text-sm font-medium text-[#8A8880]">
-            — Family member, inpatient stay
+            — Grace, inpatient stay
           </p>
         </div>
       </section>
@@ -175,7 +174,7 @@ export default function InpatientServicePage() {
         </p>
         <Link
           href="/contact"
-          className="mt-6 inline-block rounded-full bg-[#D85A30] px-6 py-3 text-sm font-medium text-white hover:bg-[#c14f28]"
+          className="mt-6 inline-block rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0a70c4]"
         >
           Get directions & contact
         </Link>
