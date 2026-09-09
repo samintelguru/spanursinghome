@@ -51,8 +51,8 @@ export default function ContactPage() {
         <div>
           <div className="flex flex-col gap-3">
             {[
-              { label: "Emergency line", value: "0706 155 600" },
-              { label: "Email", value: "info@spanursinghome.org" },
+              { label: "Emergency line", value: "0706 155 600 | 0719 863 747 | 0772 711 869" },
+              { label: "Email", value: "spanursinghome@gmail.com" },
               {
                 label: "Location",
                 value:

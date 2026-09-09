@@ -36,8 +36,8 @@ export default function ServicesPage() {
             Care for every stage
           </h1>
           <p className="mt-6 max-w-xl text-[#C9D8CE]">
-            From a full inpatient stay to a same-day lab test, our team
-            covers the care most families need close to home.
+            From a full inpatient stay to a same-day lab test, our team provides the essential healthcare most 
+            families need — close to home and available when it matters.
           </p>
         </div>
       </section>

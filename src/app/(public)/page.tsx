@@ -13,7 +13,7 @@ export default function HomePage() {
                 INPATIENT CARE · RUIRU, KIAMBU COUNTY
               </p>
               <h1 className="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
-                Someone is always on the ward
+                Someone is always here for you
               </h1>
               <p className="mt-5 max-w-md text-[#C9D8CE]">
                 Admission through discharge, a nurse is at your bedside and a
@@ -240,8 +240,7 @@ export default function HomePage() {
       <section className="bg-[#EDE6D3]/60 py-20">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <p className="font-serif text-2xl italic leading-snug text-[#3B2E22] sm:text-[26px]">
-            "Replace with a real quote from a patient or family member who has
-            given permission to be featured — including their first name."
+            "The nurses checked on my mother throughout the night. We felt she was truly cared for.” — Grace, daughter of a patient."
           </p>
           <p className="mt-5 text-sm font-medium text-[#8A8880]">
             — Family member, service used
