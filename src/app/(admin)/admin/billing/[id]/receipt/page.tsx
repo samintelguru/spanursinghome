@@ -35,7 +35,7 @@ export default async function ReceiptPage({
 
       <div className="rounded-lg border border-gray-200 p-6 print:border-0 print:p-0">
         <div className="mb-6 text-center">
-          <p className="text-sm font-medium tracking-wide text-[#0F6E56]">
+          <p className="text-sm font-medium tracking-wide text-[#0B3D63 ]">
             SPA NURSING HOME
           </p>
           <p className="text-xs text-gray-500">Ruiru, Kiambu County</p>
@@ -93,7 +93,7 @@ export default async function ReceiptPage({
 
         <div className="flex justify-between border-t border-gray-200 pt-3 text-base font-medium">
           <span>Balance</span>
-          <span className={balance > 0 ? "text-red-600" : "text-[#0F6E56]"}>
+          <span className={balance > 0 ? "text-red-600" : "text-[#0B3D63 ]"}>
             KES {balance.toFixed(2)}
           </span>
         </div>

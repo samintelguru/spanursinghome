@@ -56,7 +56,7 @@ export default function VisitNotesSection({ patientId }: { patientId: string }) 
         <h2 className="text-sm font-medium text-gray-700">Visit notes</h2>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="text-xs text-[#0F6E56] hover:underline"
+          className="text-xs text-[#0B3D63 ] hover:underline"
         >
           {showForm ? "Cancel" : "+ Add note"}
         </button>
@@ -98,7 +98,7 @@ export default function VisitNotesSection({ patientId }: { patientId: string }) 
           {error && <p className="text-sm text-red-600">{error}</p>}
           <button
             type="submit"
-            className="self-start rounded-md bg-[#0F6E56] px-4 py-2 text-sm font-medium text-white"
+            className="self-start rounded-md bg-[#0B3D63 ] px-4 py-2 text-sm font-medium text-white"
           >
             Save note
           </button>

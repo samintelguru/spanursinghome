@@ -17,7 +17,7 @@ type Invoice = {
 const statusColor: Record<string, string> = {
   UNPAID: "text-red-600",
   PARTIALLY_PAID: "text-amber-600",
-  PAID: "text-[#0F6E56]",
+  PAID: "text-[#0B3D63 ]",
   WAIVED: "text-gray-500",
 };
 
@@ -100,7 +100,7 @@ export default function AdminBillingPage() {
                     </span>
                     <Link
                       href={`/admin/billing/${inv.id}/receipt`}
-                      className="text-xs text-[#0F6E56] hover:underline"
+                      className="text-xs text-[#0B3D63 ] hover:underline"
                     >
                       Receipt
                     </Link>
@@ -151,7 +151,7 @@ export default function AdminBillingPage() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handlePay(inv.id)}
-                            className="rounded-md bg-[#0F6E56] px-4 py-2 text-sm font-medium text-white"
+                            className="rounded-md bg-[#0B3D63 ] px-4 py-2 text-sm font-medium text-white"
                           >
                             Record payment
                           </button>

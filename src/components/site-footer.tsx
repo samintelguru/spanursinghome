@@ -5,7 +5,7 @@ export default function SiteFooter() {
     <footer className="border-t border-[#E8E2D6] bg-[#F1EFE8]">
       <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 sm:grid-cols-3">
         <div>
-          <p className="font-serif text-lg font-semibold text-[#0F6E56]">
+          <p className="font-serif text-lg font-semibold text-[#0B3D63 ]">
             SPA Nursing Home
           </p>
           <p className="mt-2 text-sm text-[#5F5E5A]">
@@ -21,9 +21,9 @@ export default function SiteFooter() {
         <div>
           <p className="mb-2 text-sm font-medium text-[#2C2C2A]">Explore</p>
           <div className="flex flex-col gap-1 text-sm text-[#5F5E5A]">
-            <Link href="/services" className="hover:text-[#0F6E56]">Services</Link>
-            <Link href="/about" className="hover:text-[#0F6E56]">About us</Link>
-            <Link href="/community" className="hover:text-[#0F6E56]">Community</Link>
+            <Link href="/services" className="hover:text-[#0B3D63 ]">Services</Link>
+            <Link href="/about" className="hover:text-[#0B3D63 ]">About us</Link>
+            <Link href="/community" className="hover:text-[#0B3D63 ]">Community</Link>
           </div>
         </div>
       </div>

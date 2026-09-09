@@ -76,7 +76,7 @@ export default function PhotoCarousel({
             onClick={() => goTo(i)}
             aria-label={`Go to photo ${i + 1}`}
             className={`h-1.5 rounded-full transition-all ${
-              i === index ? "w-4 bg-[#0F6E56]" : "w-1.5 bg-white/70"
+              i === index ? "w-4 bg-[#0B3D63 ]" : "w-1.5 bg-white/70"
             }`}
           />
         ))}

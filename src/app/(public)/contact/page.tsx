@@ -32,15 +32,15 @@ export default function ContactPage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
       {/* Hero */}
-      <section className="bg-[#0B2420] text-[#F6F1E4]">
+      <section className="bg-[#0B3D63] text-[#F6F1E4]">
         <div className="mx-auto max-w-5xl px-6 pb-16 pt-16 sm:pt-24">
-          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
+          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FB8D9]">
             CONTACT
           </p>
           <h1 className="font-serif text-4xl font-semibold leading-tight">
             Get in touch
           </h1>
-          <p className="mt-6 max-w-xl text-[#C9D8CE]">
+          <p className="mt-6 max-w-xl text-[#C9D8E8]">
             For urgent concerns, walk in any time — our outpatient clinic
             never closes. For everything else, reach us below.
           </p>
@@ -70,7 +70,7 @@ export default function ContactPage() {
         <div className="rounded-2xl bg-white p-6">
           {submitted ? (
             <div className="flex h-full flex-col items-center justify-center text-center">
-              <p className="font-serif text-xl font-semibold text-[#0F6E56]">
+              <p className="font-serif text-xl font-semibold text-[#0B3D63]">
                 Message sent
               </p>
               <p className="mt-2 text-sm text-[#5F5E5A]">
@@ -107,7 +107,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={sending}
-                className="mt-2 rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0982e8] disabled:opacity-60"
+                className="mt-2 rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0a70c4] disabled:opacity-60"
               >
                 {sending ? "Sending..." : "Send message"}
               </button>

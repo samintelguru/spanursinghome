@@ -20,15 +20,15 @@ export default function AboutPage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
       {/* Hero */}
-      <section className="bg-[#0B2420] text-[#F6F1E4]">
+      <section className="bg-[#0B3D63] text-[#F6F1E4]">
         <div className="mx-auto max-w-3xl px-6 pb-16 pt-16 sm:pt-24">
-          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
+          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FB8D9]">
             ABOUT US
           </p>
           <h1 className="font-serif text-4xl font-semibold leading-tight">
             A neighbourhood clinic, grown up
           </h1>
-          <p className="mt-6 max-w-xl text-[#C9D8CE]">
+          <p className="mt-6 max-w-xl text-[#C9D8E8]">
             SPA Nursing Home is a private hospital incorporated in Kenya,
             focused on providing the care our community actually needs —
             held to a standard high enough to raise the local health status,
@@ -41,7 +41,7 @@ export default function AboutPage() {
       <section className="mx-auto max-w-5xl px-6 py-16">
         <div className="grid gap-8 sm:grid-cols-2">
           <div className="rounded-2xl bg-white p-6">
-            <p className="font-serif text-lg font-semibold text-[#0F6E56]">
+            <p className="font-serif text-lg font-semibold text-[#0B3D63]">
               Our mission
             </p>
             <p className="mt-2 text-sm text-[#5F5E5A]">
@@ -51,7 +51,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="rounded-2xl bg-white p-6">
-            <p className="font-serif text-lg font-semibold text-[#0F6E56]">
+            <p className="font-serif text-lg font-semibold text-[#0B3D63]">
               Our vision
             </p>
             <p className="mt-2 text-sm text-[#5F5E5A]">
@@ -69,7 +69,7 @@ export default function AboutPage() {
           <div className="flex flex-col gap-6">
             {HISTORY.map((paragraph, i) => (
               <div key={i} className="flex gap-5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0F6E56] text-xs font-medium text-white">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0B3D63] text-xs font-medium text-white">
                   {i + 1}
                 </div>
                 <p className="text-sm text-[#5F5E5A]">{paragraph}</p>

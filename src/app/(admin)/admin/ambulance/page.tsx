@@ -15,7 +15,7 @@ type Trip = {
 const statusColor: Record<string, string> = {
   DISPATCHED: "text-amber-600",
   EN_ROUTE: "text-[#D85A30]",
-  COMPLETED: "text-[#0F6E56]",
+  COMPLETED: "text-[#0B3D63 ]",
   CANCELLED: "text-gray-500",
 };
 
@@ -118,7 +118,7 @@ export default function AdminAmbulancePage() {
                 <div className="mt-2 flex gap-2">
                   <button
                     onClick={() => advanceStatus(trip)}
-                    className="rounded-md bg-[#0F6E56] px-3 py-1 text-xs font-medium text-white"
+                    className="rounded-md bg-[#0B3D63 ] px-3 py-1 text-xs font-medium text-white"
                   >
                     Mark {NEXT_STATUS[trip.status].replace("_", " ").toLowerCase()}
                   </button>

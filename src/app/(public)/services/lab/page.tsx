@@ -4,10 +4,10 @@ export default function LabServicePage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
       <section className="mx-auto max-w-3xl px-6 pb-20 pt-16 sm:pt-24">
-        <Link href="/services" className="text-sm text-[#0F6E56] hover:underline">
+        <Link href="/services" className="text-sm text-[#0B3D63 ] hover:underline">
           ← All services
         </Link>
-        <p className="mt-6 mb-4 text-sm font-medium tracking-wide text-[#0F6E56]">
+        <p className="mt-6 mb-4 text-sm font-medium tracking-wide text-[#0B3D63 ]">
           LAB & IMAGING
         </p>
         <h1 className="font-serif text-4xl font-semibold leading-tight">

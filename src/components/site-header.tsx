@@ -34,7 +34,7 @@ export default function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-sm hover:text-[#0F6E56] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0F6E56]"
+              className="rounded-sm hover:text-[#0B3D63 ] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0B3D63 ]"
             >
               {item.label}
             </Link>

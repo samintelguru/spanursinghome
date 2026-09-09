@@ -64,7 +64,7 @@ export default function InpatientServicePage() {
               },
             ].map((s) => (
               <div key={s.n} className="flex gap-5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0F6E56] text-xs font-medium text-white">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0B3D63 ] text-xs font-medium text-white">
                   {s.n}
                 </div>
                 <div>

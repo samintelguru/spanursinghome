@@ -5,30 +5,30 @@ export default function HomePage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
       {/* Hero — text + carousel side by side, same position/size as before */}
-      <section className="bg-[#0B2420] text-[#F6F1E4]">
+      <section className="bg-[#0B3D63] text-[#F6F1E4]">
         <div className="mx-auto max-w-6xl px-6 pb-12 pt-16 sm:pt-24">
           <div className="grid gap-12 sm:grid-cols-2 sm:items-center">
             <div>
-              <p className="mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
+              <p className="mb-4 text-sm font-medium tracking-wide text-[#8FB8D9]">
                 INPATIENT CARE · RUIRU, KIAMBU COUNTY
               </p>
               <h1 className="font-serif text-4xl font-semibold leading-tight sm:text-5xl">
                 Someone is always here for you
               </h1>
-              <p className="mt-5 max-w-md text-[#C9D8CE]">
+              <p className="mt-5 max-w-md text-[#C9D8E8]">
                 Admission through discharge, a nurse is at your bedside and a
                 doctor is a call away — day shift, night shift, every shift.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/contact"
-                  className="rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0982e8]"
+                  className="rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0a70c4]"
                 >
                   Plan an admission
                 </Link>
                 <Link
                   href="/services/inpatient"
-                  className="rounded-full border border-[#3F5A52] px-6 py-3 text-sm font-medium text-[#F6F1E4] hover:bg-white/5"
+                  className="rounded-full border border-[#3B5A78] px-6 py-3 text-sm font-medium text-[#F6F1E4] hover:bg-white/5"
                 >
                   See ward options
                 </Link>
@@ -55,10 +55,10 @@ export default function HomePage() {
           </div>
 
           {/* Nursing coverage stat bar — kept small, doesn't compete with the carousel */}
-          <div className="mt-14 flex flex-col gap-4 border-t border-[#244339] pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-14 flex flex-col gap-4 border-t border-[#1B3A55] pt-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <span className="font-serif text-2xl font-semibold">24 / 7</span>
-              <span className="ml-3 text-sm text-[#C9D8CE]">
+              <span className="ml-3 text-sm text-[#C9D8E8]">
                 nursing coverage — every hour of your stay is a staffed hour.
               </span>
             </div>
@@ -102,7 +102,7 @@ export default function HomePage() {
               },
             ].map((s) => (
               <div key={s.n} className="relative">
-                <div className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[#0F6E56] text-xs font-medium text-white">
+                <div className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[#0B3D63] text-xs font-medium text-white">
                   {s.n}
                 </div>
                 <p className="mt-4 font-medium">{s.title}</p>
@@ -209,7 +209,7 @@ export default function HomePage() {
               href={s.href}
               className="group rounded-2xl bg-[#E8E2D6] p-6 transition duration-200 hover:-translate-y-1 hover:bg-[#dfd7c4] hover:shadow-md"
             >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0F6E56]">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0B3D63]">
                 <svg
                   width="20"
                   height="20"
@@ -225,7 +225,7 @@ export default function HomePage() {
               </div>
               <p className="font-serif text-lg font-semibold">{s.title}</p>
               <p className="mt-2 text-sm text-[#5F5E5A]">{s.body}</p>
-              <p className="mt-4 text-sm font-medium text-[#0F6E56]">
+              <p className="mt-4 text-sm font-medium text-[#0B3D63]">
                 Learn more{" "}
                 <span className="inline-block transition group-hover:translate-x-0.5">
                   →
@@ -240,7 +240,7 @@ export default function HomePage() {
       <section className="bg-[#EDE6D3]/60 py-20">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <p className="font-serif text-2xl italic leading-snug text-[#3B2E22] sm:text-[26px]">
-            "The nurses checked on my mother throughout the night. We felt she was truly cared for.” — Grace, daughter of a patient."
+            "The nurses checked on my mother throughout the night. We felt she was truly cared for." — Grace, daughter of a patient.
           </p>
           <p className="mt-5 text-sm font-medium text-[#8A8880]">
             — Family member, service used
@@ -260,7 +260,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/contact"
-                className="mt-4 inline-block text-sm font-medium text-[#0F6E56] hover:underline"
+                className="mt-4 inline-block text-sm font-medium text-[#0B3D63] hover:underline"
               >
                 Get directions →
               </Link>
@@ -280,7 +280,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#0F6E56] py-16 text-center text-white">
+      <section className="bg-[#0B3D63] py-16 text-center text-white">
         <p className="font-serif text-2xl font-semibold">
           Need to arrange an admission?
         </p>
@@ -289,7 +289,7 @@ export default function HomePage() {
         </p>
         <Link
           href="/contact"
-          className="mt-6 inline-block rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0982e8]"
+          className="mt-6 inline-block rounded-full bg-[#0982e8] px-6 py-3 text-sm font-medium text-white hover:bg-[#0a70c4]"
         >
           Get in touch
         </Link>

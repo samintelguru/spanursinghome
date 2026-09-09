@@ -2,15 +2,15 @@ export default function CommunityPage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
       {/* Hero */}
-      <section className="bg-[#0B2420] text-[#F6F1E4]">
+      <section className="bg-[#0B3D63] text-[#F6F1E4]">
         <div className="mx-auto max-w-3xl px-6 pb-16 pt-16 sm:pt-24">
-          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
+          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FB8D9]">
             COMMUNITY
           </p>
           <h1 className="font-serif text-4xl font-semibold leading-tight">
             Beyond the clinic walls
           </h1>
-          <p className="mt-6 max-w-xl text-[#C9D8CE]">
+          <p className="mt-6 max-w-xl text-[#C9D8E8]">
             We host regular health talks, free screening days, and outreach
             events for the Ruiru community. Check back here for what's
             coming up next.

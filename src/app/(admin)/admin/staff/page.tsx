@@ -91,7 +91,7 @@ export default function AdminStaffPage() {
                 </td>
                 <td className="py-2 pr-4">{s.role.replace("_", " ")}</td>
                 <td className="py-2 pr-4">
-                  <span className={s.active ? "text-[#0F6E56]" : "text-gray-400"}>
+                  <span className={s.active ? "text-[#0B3D63 ]" : "text-gray-400"}>
                     {s.active ? "Active" : "Inactive"}
                   </span>
                 </td>
@@ -146,7 +146,7 @@ export default function AdminStaffPage() {
           </select>
           <button
             type="submit"
-            className="rounded-md bg-[#0F6E56] px-4 py-2 text-sm font-medium text-white"
+            className="rounded-md bg-[#0B3D63 ] px-4 py-2 text-sm font-medium text-white"
           >
             Add staff
           </button>

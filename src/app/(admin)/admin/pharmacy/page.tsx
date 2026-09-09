@@ -157,7 +157,7 @@ export default function AdminPharmacyPage() {
           />
           <button
             type="submit"
-            className="rounded-md bg-[#0F6E56] px-4 py-2 text-sm font-medium text-white"
+            className="rounded-md bg-[#0B3D63 ] px-4 py-2 text-sm font-medium text-white"
           >
             Add drug
           </button>
@@ -212,7 +212,7 @@ export default function AdminPharmacyPage() {
           />
 
           {error && <p className="text-sm text-red-600">{error}</p>}
-          {message && <p className="text-sm text-[#0F6E56]">{message}</p>}
+          {message && <p className="text-sm text-[#0B3D63 ]">{message}</p>}
 
           <button
             type="submit"

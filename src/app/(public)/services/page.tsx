@@ -27,15 +27,15 @@ export default function ServicesPage() {
   return (
     <main className="bg-[#F1EFE8] text-[#2C2C2A]">
       {/* Hero */}
-      <section className="bg-[#0B2420] text-[#F6F1E4]">
+      <section className="bg-[#0B3D63] text-[#F6F1E4]">
         <div className="mx-auto max-w-4xl px-6 pb-16 pt-16 sm:pt-24">
-          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FBBA9]">
+          <p className="mb-4 text-sm font-medium tracking-wide text-[#8FB8D9]">
             SERVICES
           </p>
           <h1 className="font-serif text-4xl font-semibold leading-tight">
             Care for every stage
           </h1>
-          <p className="mt-6 max-w-xl text-[#C9D8CE]">
+          <p className="mt-6 max-w-xl text-[#C9D8E8]">
             From a full inpatient stay to a same-day lab test, our team provides the essential healthcare most 
             families need — close to home and available when it matters.
           </p>
@@ -54,7 +54,7 @@ export default function ServicesPage() {
                 <p className="font-serif text-xl font-semibold">{s.title}</p>
                 <p className="mt-1 text-sm text-[#5F5E5A]">{s.body}</p>
               </div>
-              <span className="ml-6 shrink-0 text-sm font-medium text-[#0F6E56]">
+              <span className="ml-6 shrink-0 text-sm font-medium text-[#0B3D63]">
                 Learn more →
               </span>
             </Link>
