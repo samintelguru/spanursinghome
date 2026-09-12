@@ -116,7 +116,7 @@ export default function NewPatientPage() {
         <button
           type="submit"
           disabled={saving}
-          className="mt-2 rounded-md bg-[#0B3D63 ] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="mt-2 rounded-md bg-[#0982e8] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
         >
           {saving ? "Saving..." : "Register patient"}
         </button>

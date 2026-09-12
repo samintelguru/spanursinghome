@@ -25,19 +25,20 @@ enum StaffRole {
 }
 
 model Staff {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   fullName     String
-  email        String   @unique
+  email        String    @unique
   passwordHash String
   role         StaffRole
-  active       Boolean  @default(true)
-  createdAt    DateTime @default(now())
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
 
   dispensedDrugs   PharmacyDispense[]
   patientsAdmitted Patient[]          @relation("AdmittedBy")
   bloodIssues      BloodIssue[]
   ambulanceTrips   AmbulanceTrip[]    @relation("DriverOrStaff")
   visitNotes       VisitNote[]
+  beds             Bed[]
 }
 
 // ---------- Patients ----------
@@ -55,44 +56,45 @@ model Patient {
   dateOfBirth  DateTime
   phone        String?
   nextOfKin    String?
-  bloodType    String?  // e.g. "O+", nullable until tested
+  bloodType    String? // e.g. "O+", nullable until tested
   admittedById String?
   admittedBy   Staff?   @relation("AdmittedBy", fields: [admittedById], references: [id])
   createdAt    DateTime @default(now())
 
-  dispenses    PharmacyDispense[]
-  invoices     Invoice[]
-  bloodIssues  BloodIssue[]
+  dispenses      PharmacyDispense[]
+  invoices       Invoice[]
+  bloodIssues    BloodIssue[]
   ambulanceTrips AmbulanceTrip[]
-  visitNotes   VisitNote[]
+  visitNotes     VisitNote[]
+  beds           Bed[]
 }
 
 // ---------- Visit notes ----------
 
 model VisitNote {
-  id             String   @id @default(cuid())
-  patientId      String
-  patient        Patient  @relation(fields: [patientId], references: [id])
-  recordedById   String
-  recordedBy     Staff    @relation(fields: [recordedById], references: [id])
-  note           String
-  temperatureC   Decimal? @db.Decimal(4, 1)
-  bloodPressure  String?
-  pulseBpm       Int?
-  createdAt      DateTime @default(now())
+  id            String   @id @default(cuid())
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id])
+  recordedById  String
+  recordedBy    Staff    @relation(fields: [recordedById], references: [id])
+  note          String
+  temperatureC  Decimal? @db.Decimal(4, 1)
+  bloodPressure String?
+  pulseBpm      Int?
+  createdAt     DateTime @default(now())
 }
 
 // ---------- Pharmacy ----------
 
 model Drug {
-  id          String   @id @default(cuid())
-  name        String
-  unit        String   // e.g. "tablet", "vial", "ml"
-  unitPrice   Decimal  @db.Decimal(10, 2)
-  stockQty    Int
-  reorderAt   Int      @default(10) // low-stock threshold
-  expiryDate  DateTime?
-  updatedAt   DateTime @updatedAt
+  id         String    @id @default(cuid())
+  name       String
+  unit       String // e.g. "tablet", "vial", "ml"
+  unitPrice  Decimal   @db.Decimal(10, 2)
+  stockQty   Int
+  reorderAt  Int       @default(10) // low-stock threshold
+  expiryDate DateTime?
+  updatedAt  DateTime  @updatedAt
 
   dispenses PharmacyDispense[]
 }
@@ -132,11 +134,11 @@ model Invoice {
 }
 
 model InvoiceItem {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   invoiceId   String
-  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
-  description String   // e.g. "Consultation", "Lab test", or linked to a dispense
-  amount      Decimal  @db.Decimal(10, 2)
+  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  description String // e.g. "Consultation", "Lab test", or linked to a dispense
+  amount      Decimal @db.Decimal(10, 2)
 
   dispenseId String?           @unique
   dispense   PharmacyDispense? @relation(fields: [dispenseId], references: [id])
@@ -147,8 +149,8 @@ model Payment {
   invoiceId String
   invoice   Invoice  @relation(fields: [invoiceId], references: [id])
   amount    Decimal  @db.Decimal(10, 2)
-  method    String   // "cash", "mpesa", "insurance"
-  reference String?  // e.g. M-Pesa code
+  method    String // "cash", "mpesa", "insurance"
+  reference String? // e.g. M-Pesa code
   paidAt    DateTime @default(now())
 }
 
@@ -156,7 +158,7 @@ model Payment {
 
 model BloodStock {
   id        String   @id @default(cuid())
-  bloodType String   // "O+", "O-", "A+", etc.
+  bloodType String // "O+", "O-", "A+", etc.
   unitsHeld Int
   updatedAt DateTime @updatedAt
 
@@ -185,14 +187,35 @@ enum TripStatus {
 }
 
 model AmbulanceTrip {
-  id            String     @id @default(cuid())
-  patientId     String?
-  patient       Patient?   @relation(fields: [patientId], references: [id])
+  id             String     @id @default(cuid())
+  patientId      String?
+  patient        Patient?   @relation(fields: [patientId], references: [id])
   pickupLocation String
-  destination   String
-  status        TripStatus @default(DISPATCHED)
-  staffId       String
-  staff         Staff      @relation("DriverOrStaff", fields: [staffId], references: [id])
-  dispatchedAt  DateTime   @default(now())
-  completedAt   DateTime?
+  destination    String
+  status         TripStatus @default(DISPATCHED)
+  staffId        String
+  staff          Staff      @relation("DriverOrStaff", fields: [staffId], references: [id])
+  dispatchedAt   DateTime   @default(now())
+  completedAt    DateTime?
+}
+
+// ---------- Beds / ward occupancy ----------
+
+enum BedStatus {
+  AVAILABLE
+  OCCUPIED
+  CLEANING
+}
+
+model Bed {
+  id         String    @id @default(cuid())
+  label      String // e.g. "General Ward - Bed 3"
+  ward       String // "General", "Semi-Private", "Private"
+  status     BedStatus @default(AVAILABLE)
+  patientId  String?
+  patient    Patient?  @relation(fields: [patientId], references: [id])
+  admittedAt DateTime?
+  updatedAt  DateTime  @updatedAt
+  staff      Staff?    @relation(fields: [staffId], references: [id])
+  staffId    String?
 }

@@ -39,7 +39,7 @@ export default async function AdminAlertsPage() {
         {lowDrugs.length > 0 && (
           <Link
             href="/admin/pharmacy"
-            className="mt-2 inline-block text-sm text-[#0B3D63 ] hover:underline"
+            className="mt-2 inline-block text-sm text-[#0982e8] hover:underline"
           >
             Go to pharmacy →
           </Link>
@@ -68,7 +68,7 @@ export default async function AdminAlertsPage() {
         {lowBlood.length > 0 && (
           <Link
             href="/admin/blood-bank"
-            className="mt-2 inline-block text-sm text-[#0B3D63 ] hover:underline"
+            className="mt-2 inline-block text-sm text-[#0982e8] hover:underline"
           >
             Go to blood bank →
           </Link>

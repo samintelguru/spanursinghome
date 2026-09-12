@@ -11,6 +11,9 @@ const BASE_NAV_ITEMS = [
   { href: "/admin/billing", label: "Billing" },
   { href: "/admin/blood-bank", label: "Blood bank" },
   { href: "/admin/ambulance", label: "Ambulance" },
+  { href: "/admin/inquiries", label: "Inquiries" },
+  { href: "/admin/reports", label: "Reports" },
+  { href: "/admin/beds", label: "Beds" },
 ];
 
 export default async function AdminLayout({
@@ -38,43 +41,48 @@ export default async function AdminLayout({
     allDrugs.filter((d) => d.stockQty <= d.reorderAt).length + lowBlood.length;
 
   return (
-    <div className="min-h-screen bg-white">
-      <header className="flex items-center justify-between border-b border-gray-200 px-6 py-3">
-        <nav className="flex items-center gap-4 text-sm">
-          {navItems.map((item) => (
+    <div className="min-h-screen bg-[#F1EFE8]">
+      <header className="bg-[#0B3D63]">
+        <div className="flex items-center justify-between px-6 py-3">
+          <nav className="flex items-center gap-4 text-sm">
+            <span className="mr-2 font-serif text-sm font-semibold text-white">
+              SPA Nursing Home
+            </span>
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-[#8FB8D9] hover:text-white"
+              >
+                {item.label}
+              </Link>
+            ))}
             <Link
-              key={item.href}
-              href={item.href}
-              className="text-gray-600 hover:text-black"
+              href="/admin/alerts"
+              className="flex items-center gap-1 text-[#8FB8D9] hover:text-white"
             >
-              {item.label}
+              Alerts
+              {alertCount > 0 && (
+                <span className="rounded-full bg-[#D85A30] px-1.5 py-0.5 text-xs font-medium text-white">
+                  {alertCount}
+                </span>
+              )}
             </Link>
-          ))}
-          <Link
-            href="/admin/alerts"
-            className="flex items-center gap-1 text-gray-600 hover:text-black"
+          </nav>
+          <form
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/admin/login" });
+            }}
           >
-            Alerts
-            {alertCount > 0 && (
-              <span className="rounded-full bg-red-600 px-1.5 py-0.5 text-xs font-medium text-white">
-                {alertCount}
-              </span>
-            )}
-          </Link>
-        </nav>
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/admin/login" });
-          }}
-        >
-          <button
-            type="submit"
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm"
-          >
-            Sign out
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="rounded-md border border-[#3B5A78] px-3 py-1.5 text-sm text-[#8FB8D9] hover:bg-white/5 hover:text-white"
+            >
+              Sign out
+            </button>
+          </form>
+        </div>
       </header>
       {children}
     </div>

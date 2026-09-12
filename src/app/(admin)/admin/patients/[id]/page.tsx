@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { notFound } from "next/navigation";
 import VisitNotesSection from "./visit-notes-section";
+import PatientIdCard from "@/components/patient-id-card";
 
 const prisma = new PrismaClient();
 
@@ -31,9 +32,14 @@ export default async function PatientDetailPage({
     <main className="mx-auto max-w-3xl p-8">
       <div className="mb-6 rounded-lg border border-gray-200 p-4">
         <h1 className="text-xl font-medium">{patient.fullName}</h1>
-        <p className="text-sm text-gray-500">
+        <div className="text-sm text-gray-500">
           File no. {patient.fileNumber} · {patient.gender} · {age} yrs
-        </p>
+          <PatientIdCard
+  patientId={patient.id}
+  fileNumber={patient.fileNumber}
+  fullName={patient.fullName}
+/>
+        </div>
         <div className="mt-2 grid grid-cols-2 gap-2 text-sm text-gray-600 sm:grid-cols-3">
           <p>Phone: {patient.phone || "—"}</p>
           <p>Next of kin: {patient.nextOfKin || "—"}</p>
