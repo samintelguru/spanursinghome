@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import PatientPicker, { type PatientLite } from "@/components/patient-picker";
 
 type Patient = { id: string; fileNumber: string; fullName: string };
 type Trip = {
@@ -15,7 +16,7 @@ type Trip = {
 const statusColor: Record<string, string> = {
   DISPATCHED: "text-amber-600",
   EN_ROUTE: "text-[#D85A30]",
-  COMPLETED: "text-[#0982e8 ]",
+  COMPLETED: "text-[#0982e8]",
   CANCELLED: "text-gray-500",
 };
 
@@ -26,21 +27,16 @@ const NEXT_STATUS: Record<string, string> = {
 
 export default function AdminAmbulancePage() {
   const [trips, setTrips] = useState<Trip[]>([]);
-  const [patients, setPatients] = useState<Patient[]>([]);
+  const [patient, setPatient] = useState<PatientLite | null>(null);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
-    patientId: "",
     pickupLocation: "",
     destination: "",
   });
 
   const load = async () => {
-    const [tripsRes, patientsRes] = await Promise.all([
-      fetch("/api/ambulance"),
-      fetch("/api/patients"),
-    ]);
+    const tripsRes = await fetch("/api/ambulance");
     if (tripsRes.ok) setTrips((await tripsRes.json()).trips);
-    if (patientsRes.ok) setPatients((await patientsRes.json()).patients);
   };
 
   useEffect(() => {
@@ -54,7 +50,7 @@ export default function AdminAmbulancePage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        patientId: form.patientId || null,
+        patientId: patient?.id ?? null,
         pickupLocation: form.pickupLocation,
         destination: form.destination,
       }),
@@ -64,7 +60,8 @@ export default function AdminAmbulancePage() {
       setError(data.error || "Could not dispatch trip");
       return;
     }
-    setForm({ patientId: "", pickupLocation: "", destination: "" });
+    setPatient(null);
+    setForm({ pickupLocation: "", destination: "" });
     load();
   };
 
@@ -108,7 +105,7 @@ export default function AdminAmbulancePage() {
               </div>
               {trip.patient && (
                 <p className="text-xs text-gray-500">
-                  Patient: {trip.patient.fileNumber} — {trip.patient.fullName}
+                  Patient: {trip.patient.fullName} · {trip.patient.fileNumber}
                 </p>
               )}
               <p className="text-xs text-gray-400">
@@ -138,18 +135,11 @@ export default function AdminAmbulancePage() {
       <section>
         <h1 className="mb-4 text-xl font-medium">Dispatch trip</h1>
         <form onSubmit={handleDispatch} className="flex flex-col gap-2">
-          <select
-            value={form.patientId}
-            onChange={(e) => setForm({ ...form, patientId: e.target.value })}
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm"
-          >
-            <option value="">No patient linked yet (optional)</option>
-            {patients.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.fileNumber} — {p.fullName}
-              </option>
-            ))}
-          </select>
+          <PatientPicker
+            value={patient}
+            onChange={setPatient}
+            placeholder="Patient (optional) — type a name or file number"
+          />
 
           <input
             placeholder="Pickup location"

@@ -1,5 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { can } from "@/lib/permissions";
+import { METHOD_LABEL, fmtDate, fmtDateTime, invoiceNo, invoiceTotals, kes } from "@/lib/billing";
 import PrintButton from "./print-button";
 
 const prisma = new PrismaClient();
@@ -9,6 +13,16 @@ export default async function ReceiptPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const session = await auth();
+  const role = (session?.user as { role?: string })?.role;
+  if (!session || !can(role, "recordsPayments")) {
+    return (
+      <main className="mx-auto max-w-lg p-8">
+        <p className="text-sm text-gray-600">You don&apos;t have permission to view receipts.</p>
+      </main>
+    );
+  }
+
   const { id } = await params;
 
   const invoice = await prisma.invoice.findUnique({
@@ -16,29 +30,36 @@ export default async function ReceiptPage({
     include: {
       patient: true,
       items: true,
-      payments: { orderBy: { paidAt: "asc" } },
+      payments: {
+        orderBy: { paidAt: "asc" },
+        include: { receivedBy: { select: { fullName: true } } },
+      },
     },
   });
 
   if (!invoice) notFound();
 
-  const due = invoice.items.reduce((s, i) => s + Number(i.amount), 0);
-  const paid = invoice.payments.reduce((s, p) => s + Number(p.amount), 0);
-  const balance = due - paid;
+  const { due, paid, balance } = invoiceTotals(invoice.items, invoice.payments);
+  const waived = invoice.status === "WAIVED";
 
   return (
     <main className="mx-auto max-w-lg p-8">
       <div className="mb-6 flex items-center justify-between print:hidden">
-        <h1 className="text-xl font-medium">Receipt</h1>
+        <Link href="/admin/billing" className="text-sm text-[#0982e8] hover:underline">
+          ← Back to billing
+        </Link>
         <PrintButton />
       </div>
 
-      <div className="rounded-lg border border-gray-200 p-6 print:border-0 print:p-0">
+      <div className="rounded-lg border border-gray-200 bg-white p-6 print:border-0 print:p-0">
         <div className="mb-6 text-center">
-          <p className="text-sm font-medium tracking-wide text-[#0B3D63 ]">
+          <p className="font-serif text-lg font-semibold tracking-wide text-[#0B3D63]">
             SPA NURSING HOME
           </p>
-          <p className="text-xs text-gray-500">Ruiru, Kiambu County</p>
+          <p className="text-xs text-gray-500">Ruiru, Kiambu County · Emergency: 0706 155 600</p>
+          <p className="mt-2 text-sm font-medium text-gray-700">
+            {invoice.status === "PAID" ? "Receipt" : "Invoice / statement"}
+          </p>
         </div>
 
         <div className="mb-4 flex justify-between text-sm">
@@ -47,8 +68,8 @@ export default async function ReceiptPage({
             <p className="text-gray-500">File no. {invoice.patient.fileNumber}</p>
           </div>
           <div className="text-right text-gray-500">
-            <p>Invoice #{invoice.id.slice(-8).toUpperCase()}</p>
-            <p>{invoice.createdAt.toLocaleDateString()}</p>
+            <p>Invoice {invoiceNo(invoice.id)}</p>
+            <p>{fmtDate(invoice.createdAt)}</p>
           </div>
         </div>
 
@@ -63,7 +84,7 @@ export default async function ReceiptPage({
             {invoice.items.map((item) => (
               <tr key={item.id} className="border-b border-gray-100">
                 <td className="py-1">{item.description}</td>
-                <td className="py-1 text-right">KES {Number(item.amount).toFixed(2)}</td>
+                <td className="py-1 text-right">{kes(Number(item.amount))}</td>
               </tr>
             ))}
           </tbody>
@@ -71,32 +92,39 @@ export default async function ReceiptPage({
 
         <div className="mb-4 flex justify-between text-sm font-medium">
           <span>Total due</span>
-          <span>KES {due.toFixed(2)}</span>
+          <span>{kes(due)}</span>
         </div>
 
         {invoice.payments.length > 0 && (
           <div className="mb-4">
-            <p className="mb-1 text-xs font-medium text-gray-500">
-              Payments received
-            </p>
+            <p className="mb-1 text-xs font-medium text-gray-500">Payments received</p>
             {invoice.payments.map((p) => (
-              <div key={p.id} className="flex justify-between text-sm text-gray-600">
+              <div key={p.id} className="flex justify-between gap-3 text-sm text-gray-600">
                 <span>
-                  {p.method} {p.reference ? `(${p.reference})` : ""} —{" "}
-                  {p.paidAt.toLocaleDateString()}
+                  {METHOD_LABEL[p.method] ?? p.method}
+                  {p.reference ? ` (${p.reference})` : ""} — {fmtDateTime(p.paidAt)}
+                  {p.receivedBy ? ` · ${p.receivedBy.fullName}` : ""}
                 </span>
-                <span>KES {Number(p.amount).toFixed(2)}</span>
+                <span>{kes(Number(p.amount))}</span>
               </div>
             ))}
+            <div className="mt-1 flex justify-between border-t border-gray-100 pt-1 text-sm">
+              <span>Total paid</span>
+              <span>{kes(paid)}</span>
+            </div>
           </div>
         )}
 
         <div className="flex justify-between border-t border-gray-200 pt-3 text-base font-medium">
-          <span>Balance</span>
-          <span className={balance > 0 ? "text-red-600" : "text-[#0B3D63 ]"}>
-            KES {balance.toFixed(2)}
+          <span>{waived ? "Balance written off" : "Balance"}</span>
+          <span className={balance > 0 && !waived ? "text-red-600" : "text-[#0B3D63]"}>
+            {kes(balance)}
           </span>
         </div>
+
+        {waived && invoice.waivedReason && (
+          <p className="mt-2 text-xs text-gray-500">Waived: {invoice.waivedReason}</p>
+        )}
 
         <p className="mt-6 text-center text-xs text-gray-400">
           Thank you for choosing SPA Nursing Home.

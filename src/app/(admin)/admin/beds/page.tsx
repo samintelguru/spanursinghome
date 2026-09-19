@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import PatientPicker, { type PatientLite } from "@/components/patient-picker";
 
 type Bed = {
   id: string;
@@ -9,8 +10,6 @@ type Bed = {
   status: "AVAILABLE" | "OCCUPIED" | "CLEANING";
   patient: { fullName: string; fileNumber: string } | null;
 };
-
-type Patient = { id: string; fileNumber: string; fullName: string };
 
 const statusStyle: Record<string, string> = {
   AVAILABLE: "bg-[#E6F1FB] border-[#B8D9F0]",
@@ -26,19 +25,15 @@ const statusLabel: Record<string, string> = {
 
 export default function AdminBedsPage() {
   const [beds, setBeds] = useState<Bed[]>([]);
-  const [patients, setPatients] = useState<Patient[]>([]);
   const [admittingBedId, setAdmittingBedId] = useState<string | null>(null);
-  const [selectedPatientId, setSelectedPatientId] = useState("");
+  const [selectedPatient, setSelectedPatient] = useState<PatientLite | null>(null);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [newBed, setNewBed] = useState({ label: "", ward: "General" });
 
   const load = async () => {
-    const [bedsRes, patientsRes] = await Promise.all([
-      fetch("/api/beds"),
-      fetch("/api/patients"),
-    ]);
+    const bedsRes = await fetch("/api/beds");
     if (bedsRes.ok) setBeds((await bedsRes.json()).beds);
-    if (patientsRes.ok) setPatients((await patientsRes.json()).patients);
   };
 
   useEffect(() => {
@@ -62,34 +57,36 @@ export default function AdminBedsPage() {
     load();
   };
 
-  const handleAdmit = async (bedId: string) => {
-    if (!selectedPatientId) return;
-    await fetch(`/api/beds/${bedId}`, {
+  // Sends a bed action and shows the server's message if it is refused
+  // (e.g. patient already admitted, bed no longer available).
+  const sendBedAction = async (bedId: string, payload: Record<string, string>) => {
+    setActionError("");
+    const res = await fetch(`/api/beds/${bedId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "admit", patientId: selectedPatientId }),
+      body: JSON.stringify(payload),
     });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setActionError(data.error || "Could not update the bed");
+    }
+    await load();
+    return res.ok;
+  };
+
+  const handleAdmit = async (bedId: string) => {
+    if (!selectedPatient) return;
+    await sendBedAction(bedId, { action: "admit", patientId: selectedPatient.id });
     setAdmittingBedId(null);
-    setSelectedPatientId("");
-    load();
+    setSelectedPatient(null);
   };
 
   const handleDischarge = async (bedId: string) => {
-    await fetch(`/api/beds/${bedId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "discharge" }),
-    });
-    load();
+    await sendBedAction(bedId, { action: "discharge" });
   };
 
   const handleMarkAvailable = async (bedId: string) => {
-    await fetch(`/api/beds/${bedId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "mark_available" }),
-    });
-    load();
+    await sendBedAction(bedId, { action: "mark_available" });
   };
 
   const wards = Array.from(new Set(beds.map((b) => b.ward)));
@@ -99,6 +96,12 @@ export default function AdminBedsPage() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-medium text-[#2C2C2A]">Bed board</h1>
       </div>
+
+      {actionError && (
+        <p className="mb-4 rounded-md border border-[#E8C4B0] bg-[#FAECE7] px-3 py-2 text-sm text-[#993C1D]">
+          {actionError}
+        </p>
+      )}
 
       {wards.length === 0 ? (
         <p className="text-sm text-gray-500">No beds set up yet — add one below.</p>
@@ -121,7 +124,7 @@ export default function AdminBedsPage() {
 
                     {bed.status === "OCCUPIED" && bed.patient && (
                       <p className="mt-2 text-xs">
-                        {bed.patient.fileNumber} — {bed.patient.fullName}
+                        {bed.patient.fullName} · {bed.patient.fileNumber}
                       </p>
                     )}
 
@@ -129,23 +132,28 @@ export default function AdminBedsPage() {
                       {bed.status === "AVAILABLE" &&
                         (admittingBedId === bed.id ? (
                           <div className="flex flex-col gap-1.5">
-                            <select
-                              value={selectedPatientId}
-                              onChange={(e) => setSelectedPatientId(e.target.value)}
-                              className="rounded-md border border-gray-300 px-2 py-1 text-xs"
-                            >
-                              <option value="">Select patient</option>
-                              {patients.map((p) => (
-                                <option key={p.id} value={p.id}>
-                                  {p.fileNumber} — {p.fullName}
-                                </option>
-                              ))}
-                            </select>
+                            <PatientPicker
+                              size="sm"
+                              autoFocus
+                              value={selectedPatient}
+                              onChange={setSelectedPatient}
+                              placeholder="Type patient name..."
+                            />
                             <button
                               onClick={() => handleAdmit(bed.id)}
-                              className="rounded-md bg-[#0982e8] px-2 py-1 text-xs font-medium text-white"
+                              disabled={!selectedPatient}
+                              className="rounded-md bg-[#0982e8] px-2 py-1 text-xs font-medium text-white disabled:opacity-50"
                             >
                               Confirm admit
+                            </button>
+                            <button
+                              onClick={() => {
+                                setAdmittingBedId(null);
+                                setSelectedPatient(null);
+                              }}
+                              className="rounded-md border border-gray-300 px-2 py-1 text-xs"
+                            >
+                              Cancel
                             </button>
                           </div>
                         ) : (

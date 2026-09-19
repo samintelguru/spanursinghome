@@ -12,6 +12,8 @@ type Patient = {
   createdAt: string;
 };
 
+const PAGE_SIZE = 50;
+
 export default function AdminPatientsPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [query, setQuery] = useState("");
@@ -19,9 +21,9 @@ export default function AdminPatientsPage() {
   useEffect(() => {
     let cancelled = false;
     const timeout = setTimeout(async () => {
-      const url = query
-        ? `/api/patients?q=${encodeURIComponent(query)}`
-        : "/api/patients";
+      const url = query.trim()
+        ? `/api/patients?q=${encodeURIComponent(query.trim())}&limit=${PAGE_SIZE}`
+        : `/api/patients?limit=${PAGE_SIZE}`;
       const res = await fetch(url);
       if (!cancelled && res.ok) {
         setPatients((await res.json()).patients);
@@ -48,10 +50,11 @@ export default function AdminPatientsPage() {
 
       <input
         type="text"
-        placeholder="Search by name or file number..."
+        placeholder="Type the first letters of a name, or a file / phone number..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="mb-4 w-full max-w-sm rounded-md border border-gray-300 px-3 py-2 text-sm"
+        className="mb-4 w-full max-w-md rounded-md border border-gray-300 px-3 py-2 text-sm"
+        autoFocus
       />
 
       {patients.length === 0 ? (
@@ -64,8 +67,8 @@ export default function AdminPatientsPage() {
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-gray-500">
-              <th className="py-2 pr-4">File no.</th>
               <th className="py-2 pr-4">Name</th>
+              <th className="py-2 pr-4">File no.</th>
               <th className="py-2 pr-4">Gender</th>
               <th className="py-2 pr-4">Phone</th>
               <th className="py-2 pr-4">Registered</th>
@@ -77,16 +80,12 @@ export default function AdminPatientsPage() {
                 <td className="py-2 pr-4">
                   <Link
                     href={`/admin/patients/${p.id}`}
-                    className="text-[#0982e8] hover:underline"
+                    className="font-medium text-[#0982e8] hover:underline"
                   >
-                    {p.fileNumber}
-                  </Link>
-                </td>
-                <td className="py-2 pr-4">
-                  <Link href={`/admin/patients/${p.id}`} className="hover:underline">
                     {p.fullName}
                   </Link>
                 </td>
+                <td className="py-2 pr-4 text-gray-600">{p.fileNumber}</td>
                 <td className="py-2 pr-4">{p.gender}</td>
                 <td className="py-2 pr-4">{p.phone || "—"}</td>
                 <td className="py-2 pr-4">
@@ -96,6 +95,13 @@ export default function AdminPatientsPage() {
             ))}
           </tbody>
         </table>
+      )}
+
+      {patients.length >= PAGE_SIZE && (
+        <p className="mt-3 text-xs text-gray-500">
+          Showing {query.trim() ? "the first" : "the latest"} {PAGE_SIZE} patients — type in the box above to find
+          someone specific.
+        </p>
       )}
     </main>
   );

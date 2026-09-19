@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import PatientPicker, { type PatientLite } from "@/components/patient-picker";
 
 type Drug = {
   id: string;
@@ -11,15 +12,9 @@ type Drug = {
   reorderAt: number;
 };
 
-type Patient = {
-  id: string;
-  fileNumber: string;
-  fullName: string;
-};
-
 export default function AdminPharmacyPage() {
   const [drugs, setDrugs] = useState<Drug[]>([]);
-  const [patients, setPatients] = useState<Patient[]>([]);
+  const [patient, setPatient] = useState<PatientLite | null>(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -31,18 +26,13 @@ export default function AdminPharmacyPage() {
   });
 
   const [dispenseForm, setDispenseForm] = useState({
-    patientId: "",
     drugId: "",
     quantity: "1",
   });
 
   const loadData = async () => {
-    const [drugsRes, patientsRes] = await Promise.all([
-      fetch("/api/pharmacy/drugs"),
-      fetch("/api/patients"),
-    ]);
+    const drugsRes = await fetch("/api/pharmacy/drugs");
     if (drugsRes.ok) setDrugs((await drugsRes.json()).drugs);
-    if (patientsRes.ok) setPatients((await patientsRes.json()).patients);
   };
 
   useEffect(() => {
@@ -70,11 +60,15 @@ export default function AdminPharmacyPage() {
     e.preventDefault();
     setError("");
     setMessage("");
+    if (!patient) {
+      setError("Choose a patient first");
+      return;
+    }
     const res = await fetch("/api/pharmacy/dispense", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        patientId: dispenseForm.patientId,
+        patientId: patient.id,
         drugId: dispenseForm.drugId,
         quantity: Number(dispenseForm.quantity),
       }),
@@ -85,7 +79,8 @@ export default function AdminPharmacyPage() {
       return;
     }
     setMessage("Dispensed and added to patient's bill.");
-    setDispenseForm({ patientId: "", drugId: "", quantity: "1" });
+    setPatient(null);
+    setDispenseForm({ drugId: "", quantity: "1" });
     loadData();
   };
 
@@ -167,21 +162,7 @@ export default function AdminPharmacyPage() {
       <section>
         <h1 className="mb-4 text-xl font-medium">Dispense to patient</h1>
         <form onSubmit={handleDispense} className="flex flex-col gap-2">
-          <select
-            value={dispenseForm.patientId}
-            onChange={(e) =>
-              setDispenseForm({ ...dispenseForm, patientId: e.target.value })
-            }
-            required
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm"
-          >
-            <option value="">Select patient</option>
-            {patients.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.fileNumber} — {p.fullName}
-              </option>
-            ))}
-          </select>
+          <PatientPicker value={patient} onChange={setPatient} />
 
           <select
             value={dispenseForm.drugId}

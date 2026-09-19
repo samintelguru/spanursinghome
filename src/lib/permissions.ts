@@ -5,10 +5,13 @@ export const PERMISSIONS = {
   managesBloodStock: ["ADMIN", "LAB_TECH"],
   issuesBlood: ["ADMIN", "LAB_TECH", "DOCTOR", "NURSE"],
   recordsPayments: ["ADMIN", "BILLING_CLERK", "RECEPTIONIST"],
+  // Billing dashboard, waiving invoices, removing invoice lines
+  managesBilling: ["ADMIN", "BILLING_CLERK"],
   dispatchesAmbulance: ["ADMIN", "RECEPTIONIST", "NURSE", "DOCTOR"],
   recordsVisitNotes: ["ADMIN", "DOCTOR", "NURSE"],
   viewsInquiries: ["ADMIN", "RECEPTIONIST"],
   managesBeds: ["ADMIN", "NURSE", "DOCTOR", "RECEPTIONIST"],
+  viewsPatientHistory: ["ADMIN", "DOCTOR", "NURSE", "RECEPTIONIST"],
   managesStaff: ["ADMIN"],
 } as const;
 

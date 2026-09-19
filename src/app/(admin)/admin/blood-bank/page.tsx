@@ -1,32 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import PatientPicker, { type PatientLite } from "@/components/patient-picker";
 
 type Stock = { id: string; bloodType: string; unitsHeld: number };
-type Patient = { id: string; fileNumber: string; fullName: string };
 
 const BLOOD_TYPES = ["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"];
 
 export default function AdminBloodBankPage() {
   const [stock, setStock] = useState<Stock[]>([]);
-  const [patients, setPatients] = useState<Patient[]>([]);
+  const [patient, setPatient] = useState<PatientLite | null>(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
   const [addForm, setAddForm] = useState({ bloodType: "O+", units: "" });
   const [issueForm, setIssueForm] = useState({
     bloodStockId: "",
-    patientId: "",
     units: "1",
   });
 
   const load = async () => {
-    const [stockRes, patientsRes] = await Promise.all([
-      fetch("/api/blood-bank"),
-      fetch("/api/patients"),
-    ]);
+    const stockRes = await fetch("/api/blood-bank");
     if (stockRes.ok) setStock((await stockRes.json()).stock);
-    if (patientsRes.ok) setPatients((await patientsRes.json()).patients);
   };
 
   useEffect(() => {
@@ -54,12 +49,16 @@ export default function AdminBloodBankPage() {
     e.preventDefault();
     setError("");
     setMessage("");
+    if (!patient) {
+      setError("Choose a patient first");
+      return;
+    }
     const res = await fetch("/api/blood-bank/issue", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         bloodStockId: issueForm.bloodStockId,
-        patientId: issueForm.patientId,
+        patientId: patient.id,
         units: Number(issueForm.units),
       }),
     });
@@ -69,7 +68,8 @@ export default function AdminBloodBankPage() {
       return;
     }
     setMessage("Units issued and stock updated.");
-    setIssueForm({ bloodStockId: "", patientId: "", units: "1" });
+    setPatient(null);
+    setIssueForm({ bloodStockId: "", units: "1" });
     load();
   };
 
@@ -131,19 +131,7 @@ export default function AdminBloodBankPage() {
       <section>
         <h1 className="mb-4 text-xl font-medium">Issue to patient</h1>
         <form onSubmit={handleIssue} className="flex flex-col gap-2">
-          <select
-            value={issueForm.patientId}
-            onChange={(e) => setIssueForm({ ...issueForm, patientId: e.target.value })}
-            required
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm"
-          >
-            <option value="">Select patient</option>
-            {patients.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.fileNumber} — {p.fullName}
-              </option>
-            ))}
-          </select>
+          <PatientPicker value={patient} onChange={setPatient} />
 
           <select
             value={issueForm.bloodStockId}

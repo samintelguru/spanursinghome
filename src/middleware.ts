@@ -8,14 +8,23 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const isLoginPage = req.nextUrl.pathname === "/admin/login";
 
+  // Build redirects from the address the visitor actually used.
+  // Auth.js rewrites req.nextUrl to AUTH_URL / NEXTAUTH_URL when either is set,
+  // so relying on req.nextUrl.origin would send people to that domain instead
+  // (e.g. the old spanursinghome.org site).
+  const host = (req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "")
+    .split(",")[0]
+    .trim();
+  const isLocal = host.startsWith("localhost") || host.startsWith("127.");
+  const proto = req.headers.get("x-forwarded-proto") ?? (isLocal ? "http" : "https");
+  const origin = host ? `${proto}://${host}` : req.nextUrl.origin;
+
   if (!isLoggedIn && !isLoginPage) {
-    const loginUrl = new URL("/admin/login", req.nextUrl.origin);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL("/admin/login", origin));
   }
 
   if (isLoggedIn && isLoginPage) {
-    const adminHome = new URL("/admin", req.nextUrl.origin);
-    return NextResponse.redirect(adminHome);
+    return NextResponse.redirect(new URL("/admin", origin));
   }
 });
 

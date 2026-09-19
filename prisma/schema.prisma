@@ -39,6 +39,13 @@ model Staff {
   ambulanceTrips   AmbulanceTrip[]    @relation("DriverOrStaff")
   visitNotes       VisitNote[]
   beds             Bed[]
+
+  admissionsMade   Admission[]       @relation("AdmissionAdmittedBy")
+  admissionsClosed Admission[]       @relation("AdmissionDischargedBy")
+
+  invoicesCreated  Invoice[]         @relation("InvoiceCreatedBy")
+  invoicesWaived   Invoice[]         @relation("InvoiceWaivedBy")
+  paymentsReceived Payment[]         @relation("PaymentReceivedBy")
 }
 
 // ---------- Patients ----------
@@ -67,6 +74,7 @@ model Patient {
   ambulanceTrips AmbulanceTrip[]
   visitNotes     VisitNote[]
   beds           Bed[]
+  admissions     Admission[]
 }
 
 // ---------- Visit notes ----------
@@ -129,8 +137,23 @@ model Invoice {
   status    InvoiceStatus @default(UNPAID)
   createdAt DateTime      @default(now())
 
+  // Who raised the invoice (null for invoices created before this was tracked
+  // and for ones auto-created by pharmacy dispensing).
+  createdById String?
+  createdBy   Staff?  @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
+
+  // Set when the remaining balance is written off (status = WAIVED).
+  waivedReason String?
+  waivedAt     DateTime?
+  waivedById   String?
+  waivedBy     Staff?    @relation("InvoiceWaivedBy", fields: [waivedById], references: [id])
+
   items    InvoiceItem[]
   payments Payment[]
+
+  @@index([patientId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model InvoiceItem {
@@ -152,6 +175,13 @@ model Payment {
   method    String // "cash", "mpesa", "insurance"
   reference String? // e.g. M-Pesa code
   paidAt    DateTime @default(now())
+
+  // Staff member who took the money — needed for daily cash-up.
+  receivedById String?
+  receivedBy   Staff?  @relation("PaymentReceivedBy", fields: [receivedById], references: [id])
+
+  @@index([paidAt])
+  @@index([invoiceId])
 }
 
 // ---------- Blood bank ----------
@@ -218,4 +248,29 @@ model Bed {
   updatedAt  DateTime  @updatedAt
   staff      Staff?    @relation(fields: [staffId], references: [id])
   staffId    String?
+
+  admissions Admission[]
+}
+
+// ---------- Admissions (permanent bed-stay history) ----------
+// Bed.patientId / Bed.admittedAt only describe who is in the bed RIGHT NOW and
+// are cleared on discharge. Every admit creates a row here and every discharge
+// closes it (dischargedAt), so a patient's full stay history is never lost.
+// An open stay (dischargedAt = null) means the patient is currently admitted.
+
+model Admission {
+  id             String    @id @default(cuid())
+  patientId      String
+  patient        Patient   @relation(fields: [patientId], references: [id])
+  bedId          String
+  bed            Bed       @relation(fields: [bedId], references: [id])
+  admittedAt     DateTime  @default(now())
+  dischargedAt   DateTime?
+  admittedById   String?
+  admittedBy     Staff?    @relation("AdmissionAdmittedBy", fields: [admittedById], references: [id])
+  dischargedById String?
+  dischargedBy   Staff?    @relation("AdmissionDischargedBy", fields: [dischargedById], references: [id])
+
+  @@index([patientId, admittedAt])
+  @@index([bedId])
 }

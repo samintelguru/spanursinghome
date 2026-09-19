@@ -1,5 +1,8 @@
 import { PrismaClient } from "@prisma/client";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { can } from "@/lib/permissions";
 import VisitNotesSection from "./visit-notes-section";
 import PatientIdCard from "@/components/patient-id-card";
 
@@ -11,6 +14,9 @@ export default async function PatientDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const session = await auth();
+  const role = (session?.user as { role?: string })?.role;
+  const canViewHistory = can(role, "viewsPatientHistory");
 
   const patient = await prisma.patient.findUnique({
     where: { id },
@@ -31,7 +37,17 @@ export default async function PatientDetailPage({
   return (
     <main className="mx-auto max-w-3xl p-8">
       <div className="mb-6 rounded-lg border border-gray-200 p-4">
-        <h1 className="text-xl font-medium">{patient.fullName}</h1>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="text-xl font-medium">{patient.fullName}</h1>
+          {canViewHistory && (
+            <Link
+              href={`/admin/patients/${patient.id}/history`}
+              className="rounded-md bg-[#0982e8] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0a70c4]"
+            >
+              Full history
+            </Link>
+          )}
+        </div>
         <div className="text-sm text-gray-500">
           File no. {patient.fileNumber} · {patient.gender} · {age} yrs
           <PatientIdCard
