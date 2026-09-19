@@ -52,7 +52,7 @@ export default function ContactPage() {
           <div className="flex flex-col gap-3">
             {[
               { label: "Emergency line", value: "0706 155 600 | 0719 863 747 | 0772 711 869" },
-              { label: "Email", value: "spanursinghome@gmail.com" },
+              { label: "Email", value: "spahospitalruiruke@gmail.com" },
               {
                 label: "Location",
                 value:
