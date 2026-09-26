@@ -40,7 +40,7 @@ export default async function EquipmentDetailPage({ params }: { params: Promise<
   const dash = <span className="text-gray-300">—</span>;
 
   return (
-    <main className="mx-auto max-w-3xl p-8">
+    <main className="mx-auto max-w-3xl p-4 sm:p-8">
       <Link href="/admin/equipment" className="text-sm text-[#0982e8] hover:underline">
         ← Back to equipment
       </Link>

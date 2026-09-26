@@ -73,10 +73,11 @@ export default function AdminStaffPage() {
   };
 
   return (
-    <main className="grid gap-8 p-8 md:grid-cols-2">
+    <main className="grid gap-8 p-4 sm:p-8 md:grid-cols-2">
       <section>
         <h1 className="mb-4 text-xl font-medium">Staff accounts</h1>
         {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
+        <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-gray-500">
@@ -111,6 +112,7 @@ export default function AdminStaffPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </section>
 
       <section>

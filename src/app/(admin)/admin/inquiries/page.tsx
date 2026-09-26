@@ -111,7 +111,7 @@ export default function AdminInquiriesPage() {
   const total = counts.NEW + counts.IN_PROGRESS + counts.RESOLVED;
 
   return (
-    <main className="p-8">
+    <main className="p-4 sm:p-8">
       <div className="mb-1 flex items-baseline justify-between">
         <h1 className="text-xl font-medium text-[#2C2C2A]">Inquiries</h1>
         <p className="text-xs text-gray-500">Messages sent from the Contact page on the public site</p>

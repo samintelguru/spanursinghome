@@ -196,7 +196,7 @@ export default function AdminPharmacyPage() {
   const colSpan = canManage ? 6 : 5;
 
   return (
-    <main className="grid gap-8 p-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+    <main className="grid gap-8 p-4 sm:p-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
       <section>
         <h1 className="mb-4 text-xl font-medium">Drug inventory</h1>
 

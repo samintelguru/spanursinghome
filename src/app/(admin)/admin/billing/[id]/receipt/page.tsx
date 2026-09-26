@@ -17,7 +17,7 @@ export default async function ReceiptPage({
   const role = (session?.user as { role?: string })?.role;
   if (!session || !can(role, "recordsPayments")) {
     return (
-      <main className="mx-auto max-w-lg p-8">
+      <main className="mx-auto max-w-lg p-4 sm:p-8">
         <p className="text-sm text-gray-600">You don&apos;t have permission to view receipts.</p>
       </main>
     );
@@ -43,7 +43,7 @@ export default async function ReceiptPage({
   const waived = invoice.status === "WAIVED";
 
   return (
-    <main className="mx-auto max-w-lg p-8">
+    <main className="mx-auto max-w-lg p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between print:hidden">
         <Link href="/admin/billing" className="text-sm text-[#0982e8] hover:underline">
           ← Back to billing

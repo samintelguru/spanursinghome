@@ -12,7 +12,7 @@ export default async function NewEquipmentPage() {
 
   if (!session || !can(role, "managesEquipment")) {
     return (
-      <main className="mx-auto max-w-2xl p-8">
+      <main className="mx-auto max-w-2xl p-4 sm:p-8">
         <p className="text-sm text-gray-600">Your role can&apos;t add equipment.</p>
       </main>
     );
@@ -24,7 +24,7 @@ export default async function NewEquipmentPage() {
   ]);
 
   return (
-    <main className="mx-auto max-w-2xl p-8">
+    <main className="mx-auto max-w-2xl p-4 sm:p-8">
       <Link href="/admin/equipment" className="text-sm text-[#0982e8] hover:underline">
         ← Back to equipment
       </Link>

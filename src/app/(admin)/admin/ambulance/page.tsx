@@ -90,7 +90,7 @@ export default function AdminAmbulancePage() {
   };
 
   return (
-    <main className="grid gap-8 p-8 md:grid-cols-2">
+    <main className="grid gap-8 p-4 sm:p-8 md:grid-cols-2">
       <section>
         <h1 className="mb-4 text-xl font-medium">Ambulance trips</h1>
         <div className="flex flex-col gap-3">

@@ -66,7 +66,7 @@ export default async function AdminDashboardPage() {
   ];
 
   return (
-    <main className="p-8">
+    <main className="p-4 sm:p-8">
       <h1 className="mb-6 text-xl font-medium text-[#2C2C2A]">Dashboard</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.map((card) => (

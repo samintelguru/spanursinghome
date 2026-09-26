@@ -38,7 +38,7 @@ export default async function PatientDetailPage({
   );
 
   return (
-    <main className="mx-auto max-w-3xl p-8">
+    <main className="mx-auto max-w-3xl p-4 sm:p-8">
       <div className="mb-6 rounded-lg border border-gray-200 p-4">
         <div className="flex items-start justify-between gap-4">
           <h1 className="text-xl font-medium">{patient.fullName}</h1>

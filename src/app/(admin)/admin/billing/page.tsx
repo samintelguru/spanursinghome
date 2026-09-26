@@ -106,7 +106,7 @@ export default function AdminBillingPage() {
   }, [load]);
 
   return (
-    <main className="p-8">
+    <main className="p-4 sm:p-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-medium text-[#2C2C2A]">Billing</h1>
         <div className="flex gap-2">

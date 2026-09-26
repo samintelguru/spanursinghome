@@ -24,7 +24,7 @@ export default async function AdminAlertsPage() {
   const lowDrugs = allDrugs.filter((d) => d.stockQty <= d.reorderAt);
 
   return (
-    <main className="p-8">
+    <main className="p-4 sm:p-8">
       <h1 className="mb-6 text-xl font-medium">Alerts</h1>
 
       <section className="mb-8">

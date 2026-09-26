@@ -39,7 +39,7 @@ export default async function BillingDashboardPage() {
   const role = (session?.user as { role?: string })?.role;
   if (!session || !can(role, "managesBilling")) {
     return (
-      <main className="mx-auto max-w-3xl p-8">
+      <main className="mx-auto max-w-3xl p-4 sm:p-8">
         <p className="text-sm text-gray-600">
           The billing dashboard is only available to administrators and billing clerks.
         </p>
@@ -188,7 +188,7 @@ export default async function BillingDashboardPage() {
   ];
 
   return (
-    <main className="mx-auto max-w-6xl p-8">
+    <main className="mx-auto max-w-6xl p-4 sm:p-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <Link href="/admin/billing" className="text-sm text-[#0982e8] hover:underline">

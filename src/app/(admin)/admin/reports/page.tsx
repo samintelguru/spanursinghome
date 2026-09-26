@@ -40,7 +40,7 @@ export default function AdminReportsPage() {
   const totalRevenue = revenue.reduce((sum, r) => sum + r.total, 0);
 
   return (
-    <main className="p-8">
+    <main className="p-4 sm:p-8">
       <h1 className="mb-6 text-xl font-medium text-[#2C2C2A]">Reports</h1>
       {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 

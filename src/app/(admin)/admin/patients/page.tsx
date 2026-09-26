@@ -45,7 +45,7 @@ export default function AdminPatientsPage() {
   }, [query]);
 
   return (
-    <main className="p-8">
+    <main className="p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-medium">Patients</h1>
         <Link
@@ -77,6 +77,7 @@ export default function AdminPatientsPage() {
             : "No patients registered yet. Register the first one to get started."}
         </p>
       ) : (
+        <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-gray-500">
@@ -108,6 +109,7 @@ export default function AdminPatientsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       {patients.length >= PAGE_SIZE && (

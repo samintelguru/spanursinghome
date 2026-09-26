@@ -78,9 +78,10 @@ export default function AdminBloodBankPage() {
   };
 
   return (
-    <main className="grid gap-8 p-8 md:grid-cols-2">
+    <main className="grid gap-8 p-4 sm:p-8 md:grid-cols-2">
       <section>
         <h1 className="mb-4 text-xl font-medium">Blood stock</h1>
+        <div className="overflow-x-auto">
         <table className="mb-6 w-full text-left text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-gray-500">
@@ -102,6 +103,7 @@ export default function AdminBloodBankPage() {
             ))}
           </tbody>
         </table>
+        </div>
 
         <h2 className="mb-2 text-sm font-medium">Add stock</h2>
         <form onSubmit={handleAddStock} className="flex flex-col gap-2">
