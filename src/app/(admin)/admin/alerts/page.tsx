@@ -1,12 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 import Link from "next/link";
+import { fmtDate, startOfDayEAT } from "@/lib/billing";
+import { statusLabel } from "@/lib/equipment";
 
 const prisma = new PrismaClient();
 
 export default async function AdminAlertsPage() {
-  const [allDrugs, lowBlood] = await Promise.all([
+  const [allDrugs, lowBlood, equipment] = await Promise.all([
     prisma.drug.findMany(),
     prisma.bloodStock.findMany({ where: { unitsHeld: { lte: 2 } } }),
+    prisma.equipment.findMany({
+      where: {
+        status: { not: "DISPOSED" },
+        OR: [
+          { status: { in: ["UNDER_REPAIR", "OUT_OF_SERVICE"] } },
+          { nextServiceDue: { lt: startOfDayEAT() } },
+        ],
+      },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
   const lowDrugs = allDrugs.filter((d) => d.stockQty <= d.reorderAt);
@@ -71,6 +83,49 @@ export default async function AdminAlertsPage() {
             className="mt-2 inline-block text-sm text-[#0982e8] hover:underline"
           >
             Go to blood bank →
+          </Link>
+        )}
+      </section>
+
+      <section className="mt-8">
+        <h2 className="mb-2 text-sm font-medium text-gray-700">
+          Equipment needing attention ({equipment.length})
+        </h2>
+        {equipment.length === 0 ? (
+          <p className="text-sm text-gray-400">
+            Nothing is broken or overdue for service.
+          </p>
+        ) : (
+          <ul className="rounded-lg border border-gray-200">
+            {equipment.map((e) => {
+              const overdue = e.nextServiceDue && e.nextServiceDue < startOfDayEAT();
+              return (
+                <li
+                  key={e.id}
+                  className="flex items-center justify-between gap-4 border-b border-gray-100 px-4 py-2 text-sm last:border-b-0"
+                >
+                  <Link href={`/admin/equipment/${e.id}`} className="hover:underline">
+                    {e.name}
+                    <span className="ml-2 font-mono text-xs text-gray-400">{e.assetTag}</span>
+                  </Link>
+                  <span className="text-right text-red-600">
+                    {e.status === "UNDER_REPAIR" || e.status === "OUT_OF_SERVICE"
+                      ? statusLabel(e.status)
+                      : null}
+                    {(e.status === "UNDER_REPAIR" || e.status === "OUT_OF_SERVICE") && overdue ? " · " : null}
+                    {overdue && e.nextServiceDue ? `service due ${fmtDate(e.nextServiceDue)}` : null}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {equipment.length > 0 && (
+          <Link
+            href="/admin/equipment"
+            className="mt-2 inline-block text-sm text-[#0982e8] hover:underline"
+          >
+            Go to equipment →
           </Link>
         )}
       </section>

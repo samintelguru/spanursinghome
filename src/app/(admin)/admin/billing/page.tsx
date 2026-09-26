@@ -68,6 +68,16 @@ export default function AdminBillingPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Links from elsewhere (e.g. a patient's page) can open this list pre-filtered:
+  // /admin/billing?q=SPA-2026-00042&status=OPEN
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const q = sp.get("q");
+    const st = sp.get("status");
+    if (q) setQuery(q);
+    if (st !== null) setStatus(st);
+  }, []);
+
   const load = useCallback(async () => {
     try {
       const params = new URLSearchParams();
@@ -274,6 +284,87 @@ function InvoiceCard({
         </div>
       </div>
 
+      {/* Payment action — always right under the header so it can't be missed */}
+      {isOpen && panel !== "pay" && (
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-md bg-[#FAECE7] px-3 py-2">
+          <p className="text-sm text-[#993C1D]">
+            Balance due <span className="text-base font-medium">{kes(balance)}</span>
+          </p>
+          <button
+            onClick={() => open("pay")}
+            className="rounded-md bg-[#D85A30] px-5 py-2 text-sm font-medium text-white shadow-sm hover:opacity-90"
+          >
+            Record payment
+          </button>
+        </div>
+      )}
+      {inv.status === "PAID" && (
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-md bg-[#E6F1FB] px-3 py-2">
+          <p className="text-sm text-[#0C447C]">Paid in full — nothing more to collect</p>
+          <Link
+            href={`/admin/billing/${inv.id}/receipt`}
+            className="rounded-md bg-[#0B3D63] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+          >
+            Print receipt
+          </Link>
+        </div>
+      )}
+      {inv.status === "WAIVED" && (
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-md bg-gray-100 px-3 py-2">
+          <p className="text-sm text-gray-600">Balance written off — no payment needed</p>
+          <Link
+            href={`/admin/billing/${inv.id}/receipt`}
+            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm hover:bg-gray-50"
+          >
+            View receipt
+          </Link>
+        </div>
+      )}
+
+      {panel === "pay" && (
+            <div className="flex max-w-sm flex-col gap-2 rounded-md border border-[#D85A30]/40 bg-[#FAECE7]/40 p-3">
+              <label className="text-xs text-gray-500">Amount (balance is {kes(balance)})</label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className={input}
+              />
+              <select value={method} onChange={(e) => setMethod(e.target.value)} className={input}>
+                <option value="cash">Cash</option>
+                <option value="mpesa">M-Pesa (enter code manually)</option>
+                <option value="insurance">Insurance</option>
+              </select>
+              <input
+                placeholder={
+                  method === "mpesa"
+                    ? "M-Pesa transaction code (required)"
+                    : method === "insurance"
+                    ? "Claim / authorisation no. (optional)"
+                    : "Reference (optional)"
+                }
+                value={reference}
+                onChange={(e) => setReference(e.target.value.toUpperCase())}
+                className={input}
+              />
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              <div className="flex gap-2">
+                <button
+                  onClick={pay}
+                  disabled={busy}
+                  className="rounded-md bg-[#0B3D63] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+                >
+                  {busy ? "Saving..." : "Save payment"}
+                </button>
+                <button onClick={close} className="rounded-md border border-gray-300 px-4 py-2 text-sm">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
       <ul className="mb-3 text-sm text-gray-700">
         {inv.items.map((item) => (
           <li key={item.id} className="flex justify-between gap-3 border-b border-gray-50 py-1">
@@ -327,16 +418,10 @@ function InvoiceCard({
         <p className="mt-2 text-xs text-gray-500">Reason: {inv.waivedReason}</p>
       )}
 
-      {isOpen && (
+      {isOpen && panel !== "pay" && (
         <div className="mt-3 border-t border-gray-100 pt-3">
           {panel === null && (
             <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => open("pay")}
-                className="rounded-md bg-[#D85A30] px-4 py-2 text-sm font-medium text-white hover:opacity-90"
-              >
-                Record payment
-              </button>
               <button
                 onClick={() => open("item")}
                 className="rounded-md border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50"
@@ -351,50 +436,6 @@ function InvoiceCard({
                   Waive balance
                 </button>
               )}
-            </div>
-          )}
-
-          {panel === "pay" && (
-            <div className="flex max-w-sm flex-col gap-2">
-              <label className="text-xs text-gray-500">Amount (balance is {kes(balance)})</label>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className={input}
-              />
-              <select value={method} onChange={(e) => setMethod(e.target.value)} className={input}>
-                <option value="cash">Cash</option>
-                <option value="mpesa">M-Pesa (enter code manually)</option>
-                <option value="insurance">Insurance</option>
-              </select>
-              <input
-                placeholder={
-                  method === "mpesa"
-                    ? "M-Pesa transaction code (required)"
-                    : method === "insurance"
-                    ? "Claim / authorisation no. (optional)"
-                    : "Reference (optional)"
-                }
-                value={reference}
-                onChange={(e) => setReference(e.target.value.toUpperCase())}
-                className={input}
-              />
-              {error && <p className="text-sm text-red-600">{error}</p>}
-              <div className="flex gap-2">
-                <button
-                  onClick={pay}
-                  disabled={busy}
-                  className="rounded-md bg-[#0B3D63] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-                >
-                  {busy ? "Saving..." : "Save payment"}
-                </button>
-                <button onClick={close} className="rounded-md border border-gray-300 px-4 py-2 text-sm">
-                  Cancel
-                </button>
-              </div>
             </div>
           )}
 

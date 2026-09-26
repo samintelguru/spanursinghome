@@ -1,6 +1,8 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
+import { can } from "@/lib/permissions";
+import { startOfDayEAT } from "@/lib/billing";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -15,6 +17,7 @@ const BASE_NAV_ITEMS = [
   { href: "/admin/inquiries", label: "Inquiries" },
   { href: "/admin/reports", label: "Reports" },
   { href: "/admin/beds", label: "Beds" },
+  { href: "/admin/equipment", label: "Equipment" },
 ];
 
 export default async function AdminLayout({
@@ -29,17 +32,35 @@ export default async function AdminLayout({
   }
 
   const role = (session.user as { role?: string })?.role;
+  // Only roles allowed to read inquiries see the link (and its "new" count).
+  const canSeeInquiries = can(role, "viewsInquiries");
+  const baseItems = BASE_NAV_ITEMS.filter(
+    (i) => i.href !== "/admin/inquiries" || canSeeInquiries
+  );
   const navItems =
     role === "ADMIN"
-      ? [...BASE_NAV_ITEMS, { href: "/admin/staff", label: "Staff" }]
-      : BASE_NAV_ITEMS;
+      ? [...baseItems, { href: "/admin/staff", label: "Staff" }]
+      : baseItems;
 
-  const [allDrugs, lowBlood] = await Promise.all([
+  const [allDrugs, lowBlood, equipmentAlerts, newInquiries] = await Promise.all([
     prisma.drug.findMany(),
     prisma.bloodStock.findMany({ where: { unitsHeld: { lte: 2 } } }),
+    // Equipment that is broken, being repaired, or past its service date.
+    prisma.equipment.count({
+      where: {
+        status: { not: "DISPOSED" },
+        OR: [
+          { status: { in: ["UNDER_REPAIR", "OUT_OF_SERVICE"] } },
+          { nextServiceDue: { lt: startOfDayEAT() } },
+        ],
+      },
+    }),
+    canSeeInquiries
+      ? prisma.contactMessage.count({ where: { status: "NEW" } })
+      : Promise.resolve(0),
   ]);
   const alertCount =
-    allDrugs.filter((d) => d.stockQty <= d.reorderAt).length + lowBlood.length;
+    allDrugs.filter((d) => d.stockQty <= d.reorderAt).length + lowBlood.length + equipmentAlerts;
 
   return (
     <div className="min-h-screen bg-[#F1EFE8]">
@@ -53,9 +74,14 @@ export default async function AdminLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-[#8FB8D9] hover:text-white"
+                className="flex items-center gap-1 text-[#8FB8D9] hover:text-white"
               >
                 {item.label}
+                {item.href === "/admin/inquiries" && newInquiries > 0 && (
+                  <span className="rounded-full bg-[#D85A30] px-1.5 py-0.5 text-xs font-medium text-white">
+                    {newInquiries}
+                  </span>
+                )}
               </Link>
             ))}
             <Link
@@ -73,8 +99,11 @@ export default async function AdminLayout({
           <form
             action={async () => {
               "use server";
-   await signOut({ redirect: false });
-   redirect("/admin/login");            }}
+              // redirect: false + a relative redirect keeps people on the address
+              // they signed in on (AUTH_URL can otherwise point elsewhere).
+              await signOut({ redirect: false });
+              redirect("/admin/login");
+            }}
           >
             <button
               type="submit"

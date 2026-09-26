@@ -19,6 +19,7 @@ export default async function PatientDetailPage({
   const role = (session?.user as { role?: string })?.role;
   const canViewHistory = can(role, "viewsPatientHistory");
   const canEdit = can(role, "registersPatients");
+  const canPay = can(role, "recordsPayments");
 
   const patient = await prisma.patient.findUnique({
     where: { id },
@@ -143,10 +144,21 @@ export default async function PatientDetailPage({
             {patient.invoices.map((inv) => {
               const due = inv.items.reduce((s, i) => s + Number(i.amount), 0);
               const paid = inv.payments.reduce((s, p) => s + Number(p.amount), 0);
+              const isOpen = inv.status === "UNPAID" || inv.status === "PARTIALLY_PAID";
               return (
-                <li key={inv.id} className="flex justify-between border-b border-gray-100 py-1.5">
+                <li key={inv.id} className="flex items-center justify-between gap-3 border-b border-gray-100 py-1.5">
                   <span>{inv.status.replace("_", " ")}</span>
-                  <span>KES {(due - paid).toFixed(2)} balance</span>
+                  <span className="flex items-center gap-3">
+                    <span>KES {(due - paid).toFixed(2)} balance</span>
+                    {canPay && isOpen && (
+                      <Link
+                        href={`/admin/billing?q=${encodeURIComponent(patient.fileNumber)}&status=OPEN`}
+                        className="rounded-md bg-[#D85A30] px-3 py-1 text-xs font-medium text-white hover:opacity-90"
+                      >
+                        Record payment
+                      </Link>
+                    )}
+                  </span>
                 </li>
               );
             })}

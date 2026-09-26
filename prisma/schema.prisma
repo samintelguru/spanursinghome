@@ -49,6 +49,9 @@ model Staff {
 
   inquiriesHandled ContactMessage[]  @relation("InquiryHandledBy")
   stockMovements   StockMovement[]   @relation("StockMovementBy")
+
+  equipmentCreated  Equipment[]        @relation("EquipmentCreatedBy")
+  equipmentServices EquipmentService[] @relation("EquipmentServiceBy")
 }
 
 // ---------- Patients ----------
@@ -366,4 +369,71 @@ model StockMovement {
   createdAt    DateTime          @default(now())
 
   @@index([drugId, createdAt])
+}
+
+// ---------- Equipment inventory ----------
+
+enum EquipmentStatus {
+  IN_USE
+  IN_STORAGE
+  UNDER_REPAIR
+  OUT_OF_SERVICE
+  DISPOSED
+}
+
+enum EquipmentServiceKind {
+  SERVICE
+  REPAIR
+  CALIBRATION
+  INSPECTION
+}
+
+// One row per piece of equipment (or per group of identical items, using
+// quantity, e.g. "Wheelchairs x6").
+model Equipment {
+  id                    String          @id @default(cuid())
+  assetTag              String          @unique // e.g. EQ-0001 (or the number already painted on the item)
+  name                  String
+  category              String
+  make                  String?
+  model                 String?
+  serialNumber          String?
+  location              String? // ward / room / department
+  quantity              Int             @default(1)
+  status                EquipmentStatus @default(IN_USE)
+  purchaseDate          DateTime?
+  purchaseCost          Decimal?        @db.Decimal(12, 2) // per item
+  supplier              String?
+  warrantyExpiry        DateTime?
+  serviceIntervalMonths Int? // how often it should be serviced
+  lastServiceDate       DateTime?
+  nextServiceDue        DateTime?
+  notes                 String?
+  createdById           String?
+  createdBy             Staff?          @relation("EquipmentCreatedBy", fields: [createdById], references: [id])
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  serviceLogs EquipmentService[]
+
+  @@index([status])
+  @@index([category])
+  @@index([nextServiceDue])
+}
+
+// Services, repairs, calibrations and inspections carried out on equipment.
+model EquipmentService {
+  id           String               @id @default(cuid())
+  equipmentId  String
+  equipment    Equipment            @relation(fields: [equipmentId], references: [id])
+  kind         EquipmentServiceKind
+  performedOn  DateTime
+  performedBy  String? // technician or company
+  cost         Decimal?             @db.Decimal(12, 2)
+  notes        String?
+  recordedById String
+  recordedBy   Staff                @relation("EquipmentServiceBy", fields: [recordedById], references: [id])
+  createdAt    DateTime             @default(now())
+
+  @@index([equipmentId, performedOn])
 }

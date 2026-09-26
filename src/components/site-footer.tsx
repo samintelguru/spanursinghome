@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SocialLinks from "@/components/social-links";
 
 export default function SiteFooter() {
   return (
@@ -25,6 +26,8 @@ export default function SiteFooter() {
             <Link href="/about" className="hover:text-[#0B3D63 ]">About us</Link>
             <Link href="/community" className="hover:text-[#0B3D63 ]">Community</Link>
           </div>
+          <p className="mb-2 mt-4 text-sm font-medium text-[#2C2C2A]">Follow us</p>
+          <SocialLinks />
         </div>
       </div>
       <div className="border-t border-[#E8E2D6] px-6 py-4 text-center text-xs text-[#8A8880]">

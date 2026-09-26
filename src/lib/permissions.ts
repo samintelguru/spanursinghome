@@ -12,6 +12,8 @@ export const PERMISSIONS = {
   viewsInquiries: ["ADMIN", "RECEPTIONIST"],
   managesBeds: ["ADMIN", "NURSE", "DOCTOR", "RECEPTIONIST"],
   viewsPatientHistory: ["ADMIN", "DOCTOR", "NURSE", "RECEPTIONIST"],
+  // Add / edit equipment, log services, see purchase costs. Everyone signed in can view the register.
+  managesEquipment: ["ADMIN", "NURSE", "LAB_TECH"],
   managesStaff: ["ADMIN"],
 } as const;
 

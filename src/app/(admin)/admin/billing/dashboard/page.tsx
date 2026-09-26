@@ -327,6 +327,7 @@ export default async function BillingDashboardPage() {
                     <th className={th}>Patient</th>
                     <th className={`${th} text-right`}>Invoices</th>
                     <th className={`${th} text-right`}>Owing</th>
+                    <th className={th} />
                   </tr>
                 </thead>
                 <tbody>
@@ -340,6 +341,14 @@ export default async function BillingDashboardPage() {
                       </td>
                       <td className={`${td} text-right`}>{d.count}</td>
                       <td className={`${td} text-right font-medium text-[#993C1D]`}>{money(d.cents)}</td>
+                      <td className={`${td} text-right`}>
+                        <Link
+                          href={`/admin/billing?q=${encodeURIComponent(d.file)}&status=OPEN`}
+                          className="rounded-md bg-[#D85A30] px-2.5 py-1 text-xs font-medium text-white hover:opacity-90"
+                        >
+                          Collect
+                        </Link>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
