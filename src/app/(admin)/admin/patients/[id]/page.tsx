@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { can } from "@/lib/permissions";
 import VisitNotesSection from "./visit-notes-section";
 import PatientIdCard from "@/components/patient-id-card";
+import { ID_TYPES, MARITAL_STATUSES } from "@/lib/patient";
 
 const prisma = new PrismaClient();
 
@@ -17,6 +18,7 @@ export default async function PatientDetailPage({
   const session = await auth();
   const role = (session?.user as { role?: string })?.role;
   const canViewHistory = can(role, "viewsPatientHistory");
+  const canEdit = can(role, "registersPatients");
 
   const patient = await prisma.patient.findUnique({
     where: { id },
@@ -39,27 +41,76 @@ export default async function PatientDetailPage({
       <div className="mb-6 rounded-lg border border-gray-200 p-4">
         <div className="flex items-start justify-between gap-4">
           <h1 className="text-xl font-medium">{patient.fullName}</h1>
-          {canViewHistory && (
-            <Link
-              href={`/admin/patients/${patient.id}/history`}
-              className="rounded-md bg-[#0982e8] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0a70c4]"
-            >
-              Full history
-            </Link>
-          )}
+          <div className="flex shrink-0 gap-2">
+            {canEdit && (
+              <Link
+                href={`/admin/patients/${patient.id}/edit`}
+                className="rounded-md border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-50"
+              >
+                Edit details
+              </Link>
+            )}
+            {canViewHistory && (
+              <Link
+                href={`/admin/patients/${patient.id}/history`}
+                className="rounded-md bg-[#0982e8] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0a70c4]"
+              >
+                Full history
+              </Link>
+            )}
+          </div>
         </div>
         <div className="text-sm text-gray-500">
-          File no. {patient.fileNumber} · {patient.gender} · {age} yrs
+          File no. {patient.fileNumber} · {patient.gender} · {patient.dobEstimated ? "about " : ""}{age} yrs
           <PatientIdCard
   patientId={patient.id}
   fileNumber={patient.fileNumber}
   fullName={patient.fullName}
 />
         </div>
-        <div className="mt-2 grid grid-cols-2 gap-2 text-sm text-gray-600 sm:grid-cols-3">
+        {patient.allergies && (
+          <p className="mt-3 rounded-md bg-[#FAECE7] px-3 py-2 text-sm font-medium text-[#993C1D]">
+            Allergies: {patient.allergies}
+          </p>
+        )}
+        {patient.knownConditions && (
+          <p className="mt-2 rounded-md bg-[#FFF3D6] px-3 py-2 text-sm text-[#8A5A00]">
+            Known conditions: {patient.knownConditions}
+          </p>
+        )}
+        <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-gray-600 sm:grid-cols-3">
           <p>Phone: {patient.phone || "—"}</p>
-          <p>Next of kin: {patient.nextOfKin || "—"}</p>
+          <p>Email: {patient.email || "—"}</p>
           <p>Blood type: {patient.bloodType || "Not tested"}</p>
+          <p>
+            {ID_TYPES.find((t) => t.value === patient.idType)?.label ?? "ID"}: {patient.idNumber || "—"}
+          </p>
+          <p>
+            Marital status:{" "}
+            {MARITAL_STATUSES.find((m) => m.value === patient.maritalStatus)?.label ?? "—"}
+          </p>
+          <p>Occupation: {patient.occupation || "—"}</p>
+          <p className="col-span-2 sm:col-span-3">
+            Address: {[patient.residence, patient.county].filter(Boolean).join(", ") || "—"}
+          </p>
+          <p className="col-span-2 sm:col-span-3">
+            Next of kin:{" "}
+            {patient.nextOfKin
+              ? [
+                  patient.nextOfKin,
+                  patient.nextOfKinRelationship && `(${patient.nextOfKinRelationship})`,
+                  patient.nextOfKinPhone,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")
+              : "—"}
+          </p>
+          <p className="col-span-2 sm:col-span-3">
+            Insurance:{" "}
+            {patient.insuranceProvider
+              ? [patient.insuranceProvider, patient.insuranceMemberNo].filter(Boolean).join(" · ")
+              : "Cash / none"}
+          </p>
         </div>
       </div>
 

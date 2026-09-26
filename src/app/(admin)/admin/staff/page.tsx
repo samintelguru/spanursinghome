@@ -32,14 +32,18 @@ export default function AdminStaffPage() {
   });
 
   const load = async () => {
-    const res = await fetch("/api/staff");
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error || "Could not load staff");
-      return;
+    try {
+      const res = await fetch("/api/staff");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Could not load staff");
+        return;
+      }
+      setError("");
+      setStaff((await res.json()).staff);
+    } catch {
+      setError("Can't reach the server. Check your internet connection.");
     }
-    setError("");
-    setStaff((await res.json()).staff);
   };
 
   useEffect(() => {

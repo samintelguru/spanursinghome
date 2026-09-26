@@ -6,7 +6,7 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
-  const [form, setForm] = useState({ fullName: "", phone: "", message: "" });
+  const [form, setForm] = useState({ fullName: "", phone: "", message: "", website: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +22,12 @@ export default function ContactPage() {
     setSending(false);
 
     if (!res.ok) {
-      setError("Something went wrong. Please try calling us directly instead.");
+      const data = await res.json().catch(() => ({}));
+      setError(
+        res.status === 400 || res.status === 429
+          ? data.error || "Please check your details and try again."
+          : "Something went wrong. Please try calling us directly instead."
+      );
       return;
     }
 
@@ -80,6 +85,17 @@ export default function ContactPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              {/* Honeypot: hidden from people, filled in by bots. Leave empty. */}
+              <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={form.website}
+                onChange={(e) => setForm({ ...form, website: e.target.value })}
+                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+              />
               <input
                 placeholder="Full name"
                 required
@@ -89,6 +105,7 @@ export default function ContactPage() {
               />
               <input
                 type="tel"
+                inputMode="tel"
                 placeholder="Phone number"
                 required
                 value={form.phone}

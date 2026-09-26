@@ -32,8 +32,12 @@ export default function AdminBedsPage() {
   const [newBed, setNewBed] = useState({ label: "", ward: "General" });
 
   const load = async () => {
-    const bedsRes = await fetch("/api/beds");
-    if (bedsRes.ok) setBeds((await bedsRes.json()).beds);
+    try {
+      const bedsRes = await fetch("/api/beds");
+      if (bedsRes.ok) setBeds((await bedsRes.json()).beds);
+    } catch {
+      // Connection dropped — keep showing what we have.
+    }
   };
 
   useEffect(() => {

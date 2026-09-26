@@ -46,6 +46,9 @@ model Staff {
   invoicesCreated  Invoice[]         @relation("InvoiceCreatedBy")
   invoicesWaived   Invoice[]         @relation("InvoiceWaivedBy")
   paymentsReceived Payment[]         @relation("PaymentReceivedBy")
+
+  inquiriesHandled ContactMessage[]  @relation("InquiryHandledBy")
+  stockMovements   StockMovement[]   @relation("StockMovementBy")
 }
 
 // ---------- Patients ----------
@@ -68,6 +71,22 @@ model Patient {
   admittedBy   Staff?   @relation("AdmittedBy", fields: [admittedById], references: [id])
   createdAt    DateTime @default(now())
 
+  // ---- Extra registration details (all optional so existing patients are unaffected) ----
+  dobEstimated          Boolean @default(false) // true when only an age was known
+  idType                String? // NATIONAL_ID | PASSPORT | BIRTH_CERTIFICATE | ALIEN_ID | OTHER
+  idNumber              String?
+  maritalStatus         String? // SINGLE | MARRIED | DIVORCED | WIDOWED
+  occupation            String?
+  email                 String?
+  county                String?
+  residence             String? // town / estate / village
+  nextOfKinPhone        String?
+  nextOfKinRelationship String?
+  allergies             String?
+  knownConditions       String?
+  insuranceProvider     String? // e.g. SHA, Jubilee, AAR
+  insuranceMemberNo     String?
+
   dispenses      PharmacyDispense[]
   invoices       Invoice[]
   bloodIssues    BloodIssue[]
@@ -75,6 +94,9 @@ model Patient {
   visitNotes     VisitNote[]
   beds           Bed[]
   admissions     Admission[]
+
+  @@index([fullName])
+  @@index([idNumber])
 }
 
 // ---------- Visit notes ----------
@@ -94,6 +116,14 @@ model VisitNote {
 
 // ---------- Pharmacy ----------
 
+// The list of drug types (Tablet, Capsule, Syrup...) pharmacists pick from when
+// adding a drug. Staff can add their own. Drug.unit stores the chosen type name.
+model DrugType {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
 model Drug {
   id         String    @id @default(cuid())
   name       String
@@ -105,6 +135,7 @@ model Drug {
   updatedAt  DateTime  @updatedAt
 
   dispenses PharmacyDispense[]
+  movements StockMovement[]
 }
 
 model PharmacyDispense {
@@ -273,4 +304,66 @@ model Admission {
 
   @@index([patientId, admittedAt])
   @@index([bedId])
+}
+
+// ---------- Public contact form inbox ----------
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+}
+
+// Messages sent from the public Contact page. Staff work through them at
+// /admin/inquiries.
+model ContactMessage {
+  id           String        @id @default(cuid())
+  fullName     String
+  phone        String
+  message      String
+  status       InquiryStatus @default(NEW)
+  internalNote String? // staff-only note, never shown publicly
+  handledAt    DateTime?
+  handledById  String?
+  handledBy    Staff?        @relation("InquiryHandledBy", fields: [handledById], references: [id])
+  createdAt    DateTime      @default(now())
+
+  @@index([status, createdAt])
+  @@index([phone, createdAt])
+}
+
+// ---------- Running counters (used for patient file numbers) ----------
+
+model Counter {
+  key   String @id // e.g. "patient-file-2026"
+  value Int    @default(0)
+}
+
+// ---------- Pharmacy stock ledger ----------
+
+enum StockMovementKind {
+  RECEIVED // new stock came in (restock)
+  ADJUSTED // correction: expired, damaged, lost, stock-count fix...
+}
+
+// Every time stock is added or corrected by hand. (Dispenses are already
+// recorded in PharmacyDispense, so together they explain every change.)
+model StockMovement {
+  id           String            @id @default(cuid())
+  drugId       String
+  drug         Drug              @relation(fields: [drugId], references: [id])
+  kind         StockMovementKind
+  quantity     Int // positive = added, negative = removed
+  stockAfter   Int // stock level right after this movement
+  supplier     String?
+  batchNo      String?
+  expiryDate   DateTime? // expiry of the batch received
+  unitCost     Decimal?          @db.Decimal(10, 2) // buying price per unit
+  reason       String? // for adjustments
+  note         String?
+  recordedById String
+  recordedBy   Staff             @relation("StockMovementBy", fields: [recordedById], references: [id])
+  createdAt    DateTime          @default(now())
+
+  @@index([drugId, createdAt])
 }

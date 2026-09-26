@@ -20,8 +20,12 @@ export default function AdminBloodBankPage() {
   });
 
   const load = async () => {
-    const stockRes = await fetch("/api/blood-bank");
-    if (stockRes.ok) setStock((await stockRes.json()).stock);
+    try {
+      const stockRes = await fetch("/api/blood-bank");
+      if (stockRes.ok) setStock((await stockRes.json()).stock);
+    } catch {
+      // Connection dropped — keep showing what we have.
+    }
   };
 
   useEffect(() => {

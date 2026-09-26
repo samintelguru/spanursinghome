@@ -176,15 +176,48 @@ export default async function PatientHistoryPage({
           <p className="col-span-2 text-base font-medium sm:col-span-3">{patient.fullName}</p>
           <p className="text-gray-600">File no.: {patient.fileNumber}</p>
           <p className="text-gray-600">
-            {label(patient.gender)} · {age} yrs
+            {label(patient.gender)} · {patient.dobEstimated ? "about " : ""}{age} yrs
           </p>
-          <p className="text-gray-600">Born: {fmtDate(patient.dateOfBirth)}</p>
+          <p className="text-gray-600">
+            Born: {patient.dobEstimated ? "about " : ""}
+            {fmtDate(patient.dateOfBirth)}
+          </p>
           <p className="text-gray-600">Phone: {patient.phone || "—"}</p>
-          <p className="text-gray-600">Next of kin: {patient.nextOfKin || "—"}</p>
+          <p className="text-gray-600">
+            Next of kin:{" "}
+            {patient.nextOfKin
+              ? [patient.nextOfKin, patient.nextOfKinRelationship && `(${patient.nextOfKinRelationship})`, patient.nextOfKinPhone]
+                  .filter(Boolean)
+                  .join(" · ")
+              : "—"}
+          </p>
           <p className="text-gray-600">Blood type: {patient.bloodType || "Not tested"}</p>
+          {patient.idNumber && (
+            <p className="text-gray-600">ID no.: {patient.idNumber}</p>
+          )}
+          {(patient.residence || patient.county) && (
+            <p className="text-gray-600">
+              Address: {[patient.residence, patient.county].filter(Boolean).join(", ")}
+            </p>
+          )}
+          {patient.insuranceProvider && (
+            <p className="text-gray-600">
+              Insurance: {[patient.insuranceProvider, patient.insuranceMemberNo].filter(Boolean).join(" · ")}
+            </p>
+          )}
           <p className="text-gray-600">Registered: {fmtDate(patient.createdAt)}</p>
           {patient.admittedBy && (
             <p className="text-gray-600">Registered by: {patient.admittedBy.fullName}</p>
+          )}
+          {patient.allergies && (
+            <p className="col-span-2 font-medium text-[#993C1D] sm:col-span-3">
+              Allergies: {patient.allergies}
+            </p>
+          )}
+          {patient.knownConditions && (
+            <p className="col-span-2 text-gray-700 sm:col-span-3">
+              Known conditions: {patient.knownConditions}
+            </p>
           )}
           {currentStay && (
             <p className="col-span-2 font-medium text-[#993C1D] sm:col-span-3">

@@ -45,18 +45,25 @@ export default function NewInvoicePage() {
     if (!patient) return;
     setBusy(true);
     setError("");
-    const res = await fetch("/api/billing/invoices", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        patientId: patient.id,
-        items: filled.map((l) => ({
-          description: l.description,
-          quantity: Number(l.quantity),
-          unitPrice: Number(l.unitPrice),
-        })),
-      }),
-    });
+    let res: Response;
+    try {
+      res = await fetch("/api/billing/invoices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientId: patient.id,
+          items: filled.map((l) => ({
+            description: l.description,
+            quantity: Number(l.quantity),
+            unitPrice: Number(l.unitPrice),
+          })),
+        }),
+      });
+    } catch {
+      setBusy(false);
+      setError("Lost connection to the server. The invoice may not have been created — check the Billing list before trying again.");
+      return;
+    }
     setBusy(false);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));

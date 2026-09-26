@@ -35,8 +35,12 @@ export default function AdminAmbulancePage() {
   });
 
   const load = async () => {
-    const tripsRes = await fetch("/api/ambulance");
-    if (tripsRes.ok) setTrips((await tripsRes.json()).trips);
+    try {
+      const tripsRes = await fetch("/api/ambulance");
+      if (tripsRes.ok) setTrips((await tripsRes.json()).trips);
+    } catch {
+      // Connection dropped — keep showing what we have.
+    }
   };
 
   useEffect(() => {

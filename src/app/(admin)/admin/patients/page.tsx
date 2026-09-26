@@ -17,6 +17,7 @@ const PAGE_SIZE = 50;
 export default function AdminPatientsPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [query, setQuery] = useState("");
+  const [offline, setOffline] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -24,9 +25,16 @@ export default function AdminPatientsPage() {
       const url = query.trim()
         ? `/api/patients?q=${encodeURIComponent(query.trim())}&limit=${PAGE_SIZE}`
         : `/api/patients?limit=${PAGE_SIZE}`;
-      const res = await fetch(url);
-      if (!cancelled && res.ok) {
-        setPatients((await res.json()).patients);
+      try {
+        const res = await fetch(url);
+        if (cancelled) return;
+        if (res.ok) {
+          setPatients((await res.json()).patients);
+          setOffline(false);
+        }
+      } catch {
+        // Connection dropped mid-request — tell the user instead of failing silently.
+        if (!cancelled) setOffline(true);
       }
     }, 200);
 
@@ -48,6 +56,11 @@ export default function AdminPatientsPage() {
         </Link>
       </div>
 
+      {offline && (
+        <p className="mb-3 rounded-md bg-[#FFF3D6] px-3 py-2 text-sm text-[#8A5A00]">
+          Can&apos;t reach the server. Check your internet connection — the list will refresh when you type again.
+        </p>
+      )}
       <input
         type="text"
         placeholder="Type the first letters of a name, or a file / phone number..."

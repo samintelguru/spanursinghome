@@ -47,13 +47,17 @@ const statusStyle: Record<string, string> = {
 const input = "rounded-md border border-gray-300 px-3 py-2 text-sm";
 
 async function send(url: string, method: string, body?: unknown) {
-  const res = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  const data = await res.json().catch(() => ({}));
-  return { ok: res.ok, error: (data.error as string) || "Something went wrong", data };
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, error: (data.error as string) || "Something went wrong", data };
+  } catch {
+    return { ok: false, error: "Can't reach the server. Check your internet connection.", data: {} };
+  }
 }
 
 export default function AdminBillingPage() {
@@ -65,21 +69,25 @@ export default function AdminBillingPage() {
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    const params = new URLSearchParams();
-    if (status) params.set("status", status);
-    if (query.trim()) params.set("q", query.trim());
-    const res = await fetch(`/api/billing/invoices?${params}`);
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error || `Could not load invoices (status ${res.status})`);
+    try {
+      const params = new URLSearchParams();
+      if (status) params.set("status", status);
+      if (query.trim()) params.set("q", query.trim());
+      const res = await fetch(`/api/billing/invoices?${params}`);
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || `Could not load invoices (status ${res.status})`);
+        return;
+      }
+      const data = await res.json();
+      setError("");
+      setInvoices(data.invoices);
+      setCanManage(data.canManage);
+    } catch {
+      setError("Can't reach the server. Check your internet connection.");
+    } finally {
       setLoading(false);
-      return;
     }
-    const data = await res.json();
-    setError("");
-    setInvoices(data.invoices);
-    setCanManage(data.canManage);
-    setLoading(false);
   }, [status, query]);
 
   useEffect(() => {
